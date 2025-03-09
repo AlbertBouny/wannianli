@@ -8,7 +8,7 @@ Page({
     currentWeather: {
       temperature: 26,
       description: '晴',
-      iconUrl: '/assets/icons/weather-sunny.svg',
+      iconUrl: '/assets/icons/weather/weather-sunny.svg',
       feelsLike: 24,
       humidity: 40,
       windSpeed: 3,
@@ -19,15 +19,15 @@ Page({
 
     // 小时天气预报
     hourlyForecast: [
-      { time: '现在', temperature: 26, iconUrl: '/assets/icons/weather-sunny.svg' },
-      { time: '16:00', temperature: 27, iconUrl: '/assets/icons/weather-sunny.svg' },
-      { time: '17:00', temperature: 26, iconUrl: '/assets/icons/weather-sunny.svg' },
-      { time: '18:00', temperature: 25, iconUrl: '/assets/icons/weather-sunny.svg' },
-      { time: '19:00', temperature: 23, iconUrl: '/assets/icons/weather-cloudy.svg' },
-      { time: '20:00', temperature: 21, iconUrl: '/assets/icons/weather-cloudy.svg' },
-      { time: '21:00', temperature: 19, iconUrl: '/assets/icons/weather-cloudy.svg' },
-      { time: '22:00', temperature: 18, iconUrl: '/assets/icons/weather-cloudy.svg' },
-      { time: '23:00', temperature: 17, iconUrl: '/assets/icons/weather-cloudy.svg' }
+      { time: '现在', temperature: 26, iconUrl: '/assets/icons/weather/weather-sunny.svg' },
+      { time: '16:00', temperature: 27, iconUrl: '/assets/icons/weather/weather-sunny.svg' },
+      { time: '17:00', temperature: 26, iconUrl: '/assets/icons/weather/weather-sunny.svg' },
+      { time: '18:00', temperature: 25, iconUrl: '/assets/icons/weather/weather-sunny.svg' },
+      { time: '19:00', temperature: 23, iconUrl: '/assets/icons/weather/weather-cloudy.svg' },
+      { time: '20:00', temperature: 21, iconUrl: '/assets/icons/weather/weather-cloudy.svg' },
+      { time: '21:00', temperature: 19, iconUrl: '/assets/icons/weather/weather-cloudy.svg' },
+      { time: '22:00', temperature: 18, iconUrl: '/assets/icons/weather/weather-cloudy.svg' },
+      { time: '23:00', temperature: 17, iconUrl: '/assets/icons/weather/weather-cloudy.svg' }
     ],
 
     // 每日天气预报
@@ -37,7 +37,7 @@ Page({
         dayName: '今天',
         lowTemp: 16,
         highTemp: 27,
-        iconUrl: '/assets/icons/weather-sunny.svg',
+        iconUrl: '/assets/icons/weather/weather-sunny.svg',
         barWidth: 70,
         barLeft: 20
       },
@@ -46,7 +46,7 @@ Page({
         dayName: '周一',
         lowTemp: 17,
         highTemp: 29,
-        iconUrl: '/assets/icons/weather-sunny.svg',
+        iconUrl: '/assets/icons/weather/weather-sunny.svg',
         barWidth: 80,
         barLeft: 25
       },
@@ -55,7 +55,7 @@ Page({
         dayName: '周二',
         lowTemp: 18,
         highTemp: 30,
-        iconUrl: '/assets/icons/weather-sunny.svg',
+        iconUrl: '/assets/icons/weather/weather-sunny.svg',
         barWidth: 85,
         barLeft: 30
       },
@@ -64,7 +64,7 @@ Page({
         dayName: '周三',
         lowTemp: 19,
         highTemp: 28,
-        iconUrl: '/assets/icons/weather-cloudy.svg',
+        iconUrl: '/assets/icons/weather/weather-cloudy.svg',
         barWidth: 75,
         barLeft: 35
       },
@@ -73,7 +73,7 @@ Page({
         dayName: '周四',
         lowTemp: 17,
         highTemp: 25,
-        iconUrl: '/assets/icons/weather-rainy.svg',
+        iconUrl: '/assets/icons/weather/weather-rainy.svg',
         barWidth: 65,
         barLeft: 25
       },
@@ -82,7 +82,7 @@ Page({
         dayName: '周五',
         lowTemp: 16,
         highTemp: 22,
-        iconUrl: '/assets/icons/weather-rainy.svg',
+        iconUrl: '/assets/icons/weather/weather-rainy.svg',
         barWidth: 55,
         barLeft: 20
       },
@@ -91,7 +91,7 @@ Page({
         dayName: '周六',
         lowTemp: 15,
         highTemp: 24,
-        iconUrl: '/assets/icons/weather-cloudy.svg',
+        iconUrl: '/assets/icons/weather/weather-cloudy.svg',
         barWidth: 60,
         barLeft: 15
       }
@@ -122,15 +122,29 @@ Page({
 
     // 生活指数
     lifeIndices: [
-      { name: '紫外线', level: '中等', iconUrl: '/assets/icons/weather-sunny.svg', description: '涂擦SPF大于15、PA+防晒护肤品。' },
-      { name: '穿衣', level: '舒适', iconUrl: '/assets/icons/cloth.svg', description: '建议穿薄外套或牛仔裤等服装。' },
-      { name: '运动', level: '适宜', iconUrl: '/assets/icons/sport.svg', description: '天气较好，适宜进行各种户外运动。' },
-      { name: '感冒', level: '低发', iconUrl: '/assets/icons/cold.svg', description: '各项气象条件适宜，无明显降温过程，发生感冒的几率较低。' },
-      { name: '洗车', level: '较适宜', iconUrl: '/assets/icons/car-wash.svg', description: '较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。' },
-      { name: '钓鱼', level: '较适宜', iconUrl: '/assets/icons/fishing.svg', description: '较适合垂钓，但风力稍大会对垂钓产生一定的影响。' },
-      { name: '旅游', level: '适宜', iconUrl: '/assets/icons/travel.svg', description: '天气较好，但丝毫不会影响您出行的心情。适宜旅游。' },
-      { name: '交通', level: '良好', iconUrl: '/assets/icons/traffic.svg', description: '天气较好，交通气象条件良好，车辆可以正常行驶。' }
+      { name: '紫外线', level: '中等', iconUrl: '/assets/icons/weather/thermometer.svg', description: '涂擦SPF大于15、PA+防晒护肤品。' },
+      { name: '穿衣', level: '舒适', iconUrl: '/assets/icons/life/cloth.svg', description: '建议穿薄外套或牛仔裤等服装。' },
+      { name: '运动', level: '适宜', iconUrl: '/assets/icons/life/sport.svg', description: '天气较好，适宜进行各种户外运动。' },
+      { name: '感冒', level: '低发', iconUrl: '/assets/icons/life/cold.svg', description: '各项气象条件适宜，无明显降温过程，发生感冒的几率较低。' },
+      { name: '洗车', level: '较适宜', iconUrl: '/assets/icons/life/car-wash.svg', description: '较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。' },
+      { name: '钓鱼', level: '较适宜', iconUrl: '/assets/icons/life/fishing.svg', description: '较适合垂钓，但风力稍大会对垂钓产生一定的影响。' },
+      { name: '旅游', level: '适宜', iconUrl: '/assets/icons/life/travel.svg', description: '天气较好，但丝毫不会影响您出行的心情。适宜旅游。' },
+      { name: '交通', level: '良好', iconUrl: '/assets/icons/life/traffic.svg', description: '天气较好，交通气象条件良好，车辆可以正常行驶。' }
     ],
+
+    // 图标路径
+    icons: {
+      humidity: '/assets/icons/weather/humidity.svg',
+      wind: '/assets/icons/weather/wind.svg',
+      warning: '/assets/icons/weather/warning.svg',
+      leaf: '/assets/icons/weather/leaf.svg',
+      pressure: '/assets/icons/weather/pressure.svg',
+      visibility: '/assets/icons/weather/visibility.svg',
+      precipitation: '/assets/icons/weather/precipitation.svg',
+      arrowDown: '/assets/icons/weather/arrow-down.svg',
+      location: '/assets/icons/location.svg',
+      search: '/assets/icons/search.svg'
+    },
 
     // 上次更新时间
     lastUpdateTime: '今天 10:00',

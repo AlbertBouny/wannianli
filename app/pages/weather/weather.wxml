@@ -3,12 +3,12 @@
   <!-- 城市选择栏 -->
   <view class="location-bar">
     <view class="location-left" bindtap="selectCity">
-      <image src="/assets/icons/location.svg" class="location-icon"></image>
+      <image src="{{icons.location}}" class="location-icon"></image>
       <text class="location-name">{{currentCity}}</text>
-      <image src="/assets/icons/arrow-down.svg" class="arrow-icon"></image>
+      <image src="{{icons.arrowDown}}" class="arrow-icon"></image>
     </view>
     <view class="location-right" bindtap="goToSearch">
-      <image src="/assets/icons/search.svg" class="search-icon"></image>
+      <image src="{{icons.search}}" class="search-icon"></image>
     </view>
   </view>
 
@@ -23,11 +23,11 @@
       <view class="weather-desc">{{currentWeather.description}}</view>
       <view class="weather-details">
         <view class="detail-item">
-          <image src="/assets/icons/humidity.svg" class="detail-icon"></image>
+          <image src="{{icons.humidity}}" class="detail-icon"></image>
           <text>湿度 {{currentWeather.humidity}}%</text>
         </view>
         <view class="detail-item">
-          <image src="/assets/icons/wind.svg" class="detail-icon"></image>
+          <image src="{{icons.wind}}" class="detail-icon"></image>
           <text>{{currentWeather.windDirection}} {{currentWeather.windSpeed}}km/h</text>
         </view>
       </view>
@@ -66,7 +66,7 @@
   <!-- 天气预警卡片 -->
   <view class="weather-alert" wx:if="{{weatherAlert}}">
     <view class="alert-title">
-      <image src="/assets/icons/warning.svg" class="alert-icon"></image>
+      <image src="{{icons.warning}}" class="alert-icon"></image>
       <text>{{weatherAlert.title}}</text>
     </view>
     <view class="alert-content">{{weatherAlert.content}}</view>
@@ -76,7 +76,7 @@
   <view class="air-quality-card">
     <view class="air-quality-header">
       <view class="air-title">
-        <image src="/assets/icons/leaf.svg" class="air-title-icon"></image>
+        <image src="{{icons.leaf}}" class="air-title-icon"></image>
         <text>空气质量</text>
       </view>
       <view class="air-quality-value {{airQuality.levelClass}}">
