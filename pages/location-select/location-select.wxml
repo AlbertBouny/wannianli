@@ -1,0 +1,135 @@
+<!--pages/location-select/location-select.wxml-->
+<view class="container">
+  <!-- 搜索区域 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <image class="search-icon" src="/assets/icons/search.png"></image>
+      <input class="search-input" 
+             placeholder="搜索城市名称或拼音" 
+             value="{{searchValue}}" 
+             bindinput="handleSearchInput" 
+             confirm-type="search" />
+      <view class="search-clear-btn" bindtap="clearSearchInput" wx:if="{{searchValue}}">
+        <image class="clear-icon" src="/assets/icons/close.png"></image>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 搜索结果列表 -->
+  <scroll-view class="search-result" scroll-y="true" wx:if="{{showSearchResult}}">
+    <view class="search-tips" wx:if="{{searchResults.length === 0 && !searching}}">
+      <text>未找到匹配的城市，请更换关键词</text>
+    </view>
+    
+    <view class="searching-tips" wx:if="{{searching}}">
+      <text>搜索中...</text>
+    </view>
+    
+    <view class="city-list" wx:if="{{searchResults.length > 0 && !searching}}">
+      <view class="city-list-header">搜索结果</view>
+      <view class="city-list-content">
+        <view class="city-item" 
+              wx:for="{{searchResults}}" 
+              wx:key="id" 
+              bindtap="selectCity" 
+              data-city="{{item}}">
+          <view class="city-name">{{item.name}}</view>
+          <view class="city-badge default" wx:if="{{item.isDefault}}">默认</view>
+          <view class="city-badge location" wx:elif="{{item.isLocationBased}}">定位</view>
+          <view class="city-action" catchtap="setAsDefault" data-city="{{item}}" wx:if="{{!item.isDefault}}">
+            <text>设为默认</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  
+  <!-- 城市列表区域 -->
+  <scroll-view class="city-container" scroll-y="true" enable-back-to-top="true" wx:else>
+    <!-- 定位城市 -->
+    <view class="city-section">
+      <view class="city-section-header">定位城市</view>
+      <view class="city-section-content">
+        <view class="location-city">
+          <view class="city-item" 
+                bindtap="selectCity" 
+                data-city="{{locationCity}}" 
+                wx:if="{{!locating && !locationFailed}}">
+            <view class="city-name">{{locationCity.name}}</view>
+            <view class="city-badge default" wx:if="{{locationCity.isDefault}}">默认</view>
+            <view class="city-badge location" wx:else>定位</view>
+            <view class="city-action" catchtap="setAsDefault" data-city="{{locationCity}}" wx:if="{{!locationCity.isDefault}}">
+              <text>设为默认</text>
+            </view>
+          </view>
+          
+          <view class="location-status" wx:if="{{locating}}">
+            <image class="loading-icon" src="/assets/icons/loading.png"></image>
+            <text class="location-text">正在定位...</text>
+          </view>
+          
+          <view class="location-status failed" wx:if="{{locationFailed}}">
+            <text class="location-text">定位失败，</text>
+            <text class="retry-btn" bindtap="refreshLocation">重试</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 最近使用的城市 -->
+    <view class="city-section" wx:if="{{recentCities.length > 0}}">
+      <view class="city-section-header">最近使用</view>
+      <view class="city-section-content">
+        <view class="city-item" 
+              wx:for="{{recentCities}}" 
+              wx:key="id" 
+              bindtap="selectCity" 
+              data-city="{{item}}">
+          <view class="city-name">{{item.name}}</view>
+          <view class="city-badge default" wx:if="{{item.isDefault}}">默认</view>
+          <view class="city-action" catchtap="setAsDefault" data-city="{{item}}" wx:if="{{!item.isDefault}}">
+            <text>设为默认</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 搜索历史 -->
+    <view class="city-section" wx:if="{{searchHistory.length > 0}}">
+      <view class="city-section-header">
+        <text>搜索历史</text>
+        <text class="clear-history-btn" bindtap="clearSearchHistory">清空</text>
+      </view>
+      <view class="city-section-content">
+        <view class="city-item" 
+              wx:for="{{searchHistory}}" 
+              wx:key="id" 
+              bindtap="selectCity" 
+              data-city="{{item}}">
+          <view class="city-name">{{item.name}}</view>
+          <view class="city-badge default" wx:if="{{item.isDefault}}">默认</view>
+          <view class="city-action" catchtap="setAsDefault" data-city="{{item}}" wx:if="{{!item.isDefault}}">
+            <text>设为默认</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 热门城市 -->
+    <view class="city-section">
+      <view class="city-section-header">热门城市</view>
+      <view class="city-section-content hot-cities">
+        <view class="city-grid-item" 
+              wx:for="{{hotCities}}" 
+              wx:key="id" 
+              bindtap="selectCity" 
+              data-city="{{item}}">
+          <view class="city-grid-name {{item.isDefault ? 'default' : ''}}">
+            {{item.name}}
+            <view class="city-grid-badge" wx:if="{{item.isDefault}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view> 

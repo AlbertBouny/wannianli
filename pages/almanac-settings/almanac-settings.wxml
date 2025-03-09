@@ -1,0 +1,65 @@
+<!--pages/almanac-settings/almanac-settings.wxml-->
+<view class="container">
+  <view class="settings-section">
+    <view class="section-title">基本设置</view>
+    
+    <view class="setting-item">
+      <text class="setting-label">宜忌展示</text>
+      <switch checked="{{almanacSettings.showGoodBad}}" bindchange="toggleSetting" data-key="showGoodBad" color="#e63946"/>
+    </view>
+    
+    <view class="setting-item">
+      <text class="setting-label">方位展示</text>
+      <switch checked="{{almanacSettings.showDirection}}" bindchange="toggleSetting" data-key="showDirection" color="#e63946"/>
+    </view>
+    
+    <view class="setting-item">
+      <text class="setting-label">时辰详情</text>
+      <switch checked="{{almanacSettings.showHourDetail}}" bindchange="toggleSetting" data-key="showHourDetail" color="#e63946"/>
+    </view>
+    
+    <view class="setting-item">
+      <text class="setting-label">吉神凶煞</text>
+      <switch checked="{{almanacSettings.showStars}}" bindchange="toggleSetting" data-key="showStars" color="#e63946"/>
+    </view>
+  </view>
+  
+  <view class="settings-section">
+    <view class="section-title">显示主题</view>
+    
+    <view class="setting-item">
+      <text class="setting-label">黄历主题</text>
+      <picker mode="selector" range="{{themeOptions}}" range-key="name" value="{{themeIndex}}" bindchange="changeTheme">
+        <view class="picker-content">
+          <text class="picker-text">{{currentThemeName}}</text>
+          <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <view class="settings-section">
+    <view class="section-title">提醒设置</view>
+    
+    <view class="setting-item">
+      <text class="setting-label">每日提醒</text>
+      <switch checked="{{almanacSettings.enableReminder}}" bindchange="toggleSetting" data-key="enableReminder" color="#e63946"/>
+    </view>
+    
+    <view class="setting-item" wx:if="{{almanacSettings.enableReminder}}">
+      <text class="setting-label">提醒时间</text>
+      <picker mode="time" value="{{almanacSettings.reminderTime}}" bindchange="changeReminderTime">
+        <view class="picker-content">
+          <text class="picker-text">{{almanacSettings.reminderTime}}</text>
+          <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <button class="reset-btn" bindtap="resetSettings">恢复默认设置</button>
+  
+  <view class="tip-view">
+    <text class="tip-text">黄历数据仅供参考，请勿迷信</text>
+  </view>
+</view> 

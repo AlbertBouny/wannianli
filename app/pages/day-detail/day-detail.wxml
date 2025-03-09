@@ -1,0 +1,227 @@
+<!--日期详情页-->
+<view class="container">
+  <!-- 日期头部 -->
+  <view class="date-header">
+    <view class="header-left" bindtap="back">
+      <text class="iconfont icon-back"></text>
+    </view>
+    
+    <view class="header-center">
+      <view class="date-title">{{year}}年{{month}}月{{day}}日</view>
+      <view class="date-subtitle">{{weekday}} {{isSpecialDay ? specialDayName : ''}}</view>
+    </view>
+    
+    <view class="header-right">
+      <view class="favorite-btn {{isFavorite ? 'is-favorite' : ''}}" bindtap="toggleFavorite">
+        <text class="iconfont {{isFavorite ? 'icon-star-filled' : 'icon-star'}}"></text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 农历信息 -->
+  <view class="lunar-card">
+    <view class="lunar-main">
+      <view class="lunar-date">{{lunarInfo.lunarDate}}</view>
+      <view class="lunar-year">{{lunarInfo.lunarYear}} ({{lunarInfo.ganzhi}}年) {{lunarInfo.zodiac}}年</view>
+    </view>
+    
+    <view class="lunar-solar-term" wx:if="{{lunarInfo.solarTerm}}">
+      <text class="term-badge">{{lunarInfo.solarTerm}}</text>
+    </view>
+  </view>
+  
+  <!-- 黄历信息 -->
+  <view class="almanac-card">
+    <view class="card-title">
+      <text class="iconfont icon-almanac"></text>
+      黄历
+    </view>
+    
+    <!-- 冲煞信息 -->
+    <view class="almanac-chongsha">
+      <text>{{almanacInfo.chongsha}}</text>
+      <text class="divider">|</text>
+      <text>{{almanacInfo.starNames}}</text>
+    </view>
+    
+    <!-- 五行值神 -->
+    <view class="almanac-wuxing">
+      <text>五行：{{almanacInfo.wuxing}}</text>
+      <text class="divider">|</text>
+      <text>值神：{{almanacInfo.value}}</text>
+    </view>
+    
+    <!-- 吉神方位 -->
+    <view class="almanac-directions">
+      <view class="direction-item">
+        <text class="direction-label">吉神</text>
+        <text class="direction-value">{{almanacInfo.directions.lucky}}</text>
+      </view>
+      <view class="direction-item">
+        <text class="direction-label">财神</text>
+        <text class="direction-value">{{almanacInfo.directions.wealth}}</text>
+      </view>
+      <view class="direction-item">
+        <text class="direction-label">喜神</text>
+        <text class="direction-value">{{almanacInfo.directions.godOfJoy}}</text>
+      </view>
+    </view>
+    
+    <!-- 宜忌项目 -->
+    <view class="almanac-activities">
+      <view class="activity-section">
+        <view class="activity-header" bindtap="toggleSuitable">
+          <text class="activity-title good">宜</text>
+          <view class="activity-preview">
+            <text wx:for="{{almanacInfo.suitable}}" wx:key="name" wx:if="{{index < 3}}">{{item.name}}{{index < 2 && index < almanacInfo.suitable.length-1 ? '、' : ''}}</text>
+            <text wx:if="{{almanacInfo.suitable.length > 3}}">...</text>
+          </view>
+          <text class="toggle-icon {{suitableExpanded ? 'expanded' : ''}}">
+            <text class="iconfont icon-arrow-down"></text>
+          </text>
+        </view>
+        
+        <view class="activity-detail" wx:if="{{suitableExpanded}}">
+          <view 
+            class="activity-item" 
+            wx:for="{{almanacInfo.suitable}}" 
+            wx:key="name"
+          >
+            <text class="activity-name">{{item.name}}</text>
+            <text class="activity-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="activity-section">
+        <view class="activity-header" bindtap="toggleAvoid">
+          <text class="activity-title bad">忌</text>
+          <view class="activity-preview">
+            <text wx:for="{{almanacInfo.avoid}}" wx:key="name" wx:if="{{index < 3}}">{{item.name}}{{index < 2 && index < almanacInfo.avoid.length-1 ? '、' : ''}}</text>
+            <text wx:if="{{almanacInfo.avoid.length > 3}}">...</text>
+          </view>
+          <text class="toggle-icon {{avoidExpanded ? 'expanded' : ''}}">
+            <text class="iconfont icon-arrow-down"></text>
+          </text>
+        </view>
+        
+        <view class="activity-detail" wx:if="{{avoidExpanded}}">
+          <view 
+            class="activity-item" 
+            wx:for="{{almanacInfo.avoid}}" 
+            wx:key="name"
+          >
+            <text class="activity-name">{{item.name}}</text>
+            <text class="activity-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 时辰信息 -->
+    <view class="hour-section">
+      <view class="hour-header" bindtap="toggleHourInfo">
+        <text class="hour-title">时辰吉凶</text>
+        <text class="toggle-icon {{hourExpanded ? 'expanded' : ''}}">
+          <text class="iconfont icon-arrow-down"></text>
+        </text>
+      </view>
+      
+      <view class="hour-detail" wx:if="{{hourExpanded}}">
+        <view 
+          class="hour-item" 
+          wx:for="{{almanacInfo.hourInfo}}" 
+          wx:key="hour"
+        >
+          <view class="hour-info">
+            <text class="hour-name">{{item.hour}}</text>
+            <text class="hour-goodbad {{item.goodBad === '吉' ? 'good' : 'bad'}}">{{item.goodBad}}</text>
+          </view>
+          <view class="hour-activities">
+            <view class="hour-suitable" wx:if="{{item.suitable}}">
+              <text class="hour-label good">宜：</text>
+              <text>{{item.suitable}}</text>
+            </view>
+            <view class="hour-avoid" wx:if="{{item.avoid}}">
+              <text class="hour-label bad">忌：</text>
+              <text>{{item.avoid}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 日程部分 -->
+  <view class="events-card">
+    <view class="card-title">
+      <text class="iconfont icon-schedule"></text>
+      日程
+    </view>
+    
+    <block wx:if="{{hasEvents}}">
+      <view 
+        class="event-item {{event.isAllDay ? 'all-day' : ''}}"
+        wx:for="{{events}}" 
+        wx:for-item="event" 
+        wx:key="id"
+        id="event-{{event.id}}"
+        bindtap="editEvent"
+        data-id="{{event.id}}"
+        bindlongpress="onEventLongPress"
+        data-id="{{event.id}}"
+        data-title="{{event.title}}"
+      >
+        <view class="event-time" wx:if="{{!event.isAllDay}}">
+          {{event.startTime}} - {{event.endTime}}
+        </view>
+        <view class="event-time all-day" wx:else>
+          全天
+        </view>
+        
+        <view class="event-content">
+          <view class="event-title-row">
+            <view class="event-color" style="background-color: {{event.color}}"></view>
+            <text class="event-title">{{event.title}}</text>
+          </view>
+          
+          <view class="event-location" wx:if="{{event.location}}">
+            <text class="iconfont icon-location"></text>
+            <text>{{event.location}}</text>
+          </view>
+        </view>
+        
+        <view class="event-category" wx:if="{{event.categoryName}}">
+          <text class="category-tag">{{event.categoryName}}</text>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 无日程状态 -->
+    <view class="empty-events" wx:if="{{!hasEvents}}">
+      <view class="empty-icon">
+        <text class="iconfont icon-empty-calendar"></text>
+      </view>
+      <view class="empty-text">没有日程安排</view>
+      <view class="empty-add-btn" bindtap="addEvent">添加日程</view>
+    </view>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="action-btn add-btn" bindtap="addEvent">
+      <text class="iconfont icon-add"></text>
+      <text>添加日程</text>
+    </view>
+    
+    <view class="action-btn share-btn" bindtap="shareDate">
+      <text class="iconfont icon-share"></text>
+      <text>分享</text>
+    </view>
+    
+    <view class="action-btn almanac-btn" bindtap="navigateToAlmanac">
+      <text class="iconfont icon-almanac"></text>
+      <text>查看黄历</text>
+    </view>
+  </view>
+</view> 

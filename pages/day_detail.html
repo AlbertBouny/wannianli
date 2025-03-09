@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 日期详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+        
+        /* 日期详情页特定样式 */
+        .day-header {
+            background-color: #e63946;
+            color: white;
+            padding: 16px;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: white;
+        }
+        
+        .header-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .date-card {
+            background-color: white;
+            padding: 20px;
+            margin: 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .gregorian-date {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .lunar-date {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .date-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .date-tag {
+            padding: 4px 10px;
+            background-color: #fff1f1;
+            color: #e63946;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .info-section {
+            background-color: white;
+            margin: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            padding: 12px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #e63946;
+        }
+        
+        .section-content {
+            padding: 16px;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            width: 80px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            flex: 1;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .fortune-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .fortune-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .fortune-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #fff1f1;
+            color: #e63946;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .fortune-text {
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .taboo-icon {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .activity-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+        }
+        
+        .activity-button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin: 0 6px;
+        }
+        
+        .activity-button i {
+            font-size: 24px;
+            color: #e63946;
+            margin-bottom: 8px;
+        }
+        
+        .activity-text {
+            font-size: 12px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .holiday-info {
+            padding: 16px;
+            background-color: #fff8e1;
+            border-left: 4px solid #ffb300;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            margin: 16px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 头部 -->
+        <div class="day-header">
+            <a href="home.html" class="back-button"><i class="fas fa-chevron-left"></i></a>
+            <div class="header-title">日期详情</div>
+        </div>
+        
+        <!-- 日期卡片 -->
+        <div class="date-card">
+            <div class="gregorian-date">2025年3月9日 星期日</div>
+            <div class="lunar-date">二零二五年 二月初十</div>
+            <div class="date-tags">
+                <div class="date-tag">九九第7天</div>
+                <div class="date-tag">春季</div>
+            </div>
+        </div>
+        
+        <!-- 日期信息 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-calendar-day"></i>
+                <span>日期信息</span>
+            </div>
+            <div class="section-content">
+                <div class="info-row">
+                    <div class="info-label">干支纪年</div>
+                    <div class="info-value">乙巳年 丙寅月 癸丑日</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">今日五行</div>
+                    <div class="info-value">海中金 五行土</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">生肖属相</div>
+                    <div class="info-value">蛇年</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">冲煞</div>
+                    <div class="info-value">冲牛(己丑)煞西</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 宜忌信息 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-calendar-check"></i>
+                <span>今日宜忌</span>
+            </div>
+            <div class="section-content">
+                <div class="fortune-list">
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">祭祀</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">结婚</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">入宅</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">出行</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">开业</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon">宜</div>
+                        <div class="fortune-text">求财</div>
+                    </div>
+                    
+                    <div class="fortune-item">
+                        <div class="fortune-icon taboo-icon">忌</div>
+                        <div class="fortune-text">动土</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon taboo-icon">忌</div>
+                        <div class="fortune-text">安门</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon taboo-icon">忌</div>
+                        <div class="fortune-text">修造</div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-icon taboo-icon">忌</div>
+                        <div class="fortune-text">安葬</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 吉神凶煞 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-yin-yang"></i>
+                <span>吉神凶煞</span>
+            </div>
+            <div class="section-content">
+                <div class="info-row">
+                    <div class="info-label">吉神宜趋</div>
+                    <div class="info-value">天德合 月德合 天赦 不将</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">凶煞宜忌</div>
+                    <div class="info-value">月建 小时 土府 五墓</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 彭祖百忌 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-ghost"></i>
+                <span>彭祖百忌</span>
+            </div>
+            <div class="section-content">
+                <div class="info-row">
+                    <div class="info-value">癸不词讼 丑不冠带</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 节气信息 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-sun"></i>
+                <span>节气信息</span>
+            </div>
+            <div class="section-content">
+                <div class="info-row">
+                    <div class="info-label">当前节气</div>
+                    <div class="info-value">惊蛰（3月5日）</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">下个节气</div>
+                    <div class="info-value">春分（3月20日）</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 今日民俗 -->
+        <div class="holiday-info">
+            <strong>今日民俗：</strong>农历二月初十是一个具有传统意义的日子，民间有赏花习俗，可赏梅、桃等春季花卉，享受春光。
+        </div>
+        
+        <!-- 功能按钮 -->
+        <div class="activity-buttons">
+            <div class="activity-button">
+                <i class="fas fa-plus"></i>
+                <div class="activity-text">添加提醒</div>
+            </div>
+            <div class="activity-button">
+                <i class="fas fa-share-alt"></i>
+                <div class="activity-text">分享日期</div>
+            </div>
+            <div class="activity-button">
+                <i class="fas fa-bookmark"></i>
+                <div class="activity-text">收藏</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <div class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+</body>
+</html> 

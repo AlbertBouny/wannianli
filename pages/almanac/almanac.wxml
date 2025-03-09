@@ -1,0 +1,189 @@
+<!--pages/almanac/almanac.wxml-->
+<view class="container">
+  <!-- 日期导航区域 -->
+  <view class="date-navigator">
+    <view class="date-arrow" bindtap="goPrevDay">
+      <image class="arrow-icon" src="/assets/icons/arrow-left.png"></image>
+    </view>
+    <view class="date-info" bindtap="showDatePicker">
+      <view class="date-text">{{currentDate.year}}年{{currentDate.month}}月{{currentDate.day}}日</view>
+      <view class="weekday-text">{{currentDate.weekday}}</view>
+    </view>
+    <view class="date-arrow" bindtap="goNextDay">
+      <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+    </view>
+    <view class="settings-btn" bindtap="goToSettings">
+      <image class="settings-icon" src="/assets/icons/settings.png"></image>
+    </view>
+  </view>
+  
+  <!-- 农历信息 -->
+  <view class="lunar-info-card">
+    <view class="lunar-date">
+      <view class="lunar-year">
+        <text>农历 {{lunarInfo.lunarYear}}年</text>
+        <text class="zodiac-text">{{lunarInfo.zodiac}}年</text>
+      </view>
+      <view class="lunar-month-day">{{lunarInfo.lunarMonth}}{{lunarInfo.lunarDay}}</view>
+    </view>
+    
+    <view class="ganzhi-info">
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">年柱</text>
+        <text class="ganzhi-value">{{lunarInfo.yearGanZhi}}</text>
+      </view>
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">月柱</text>
+        <text class="ganzhi-value">{{lunarInfo.monthGanZhi}}</text>
+      </view>
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">日柱</text>
+        <text class="ganzhi-value">{{lunarInfo.dayGanZhi}}</text>
+      </view>
+    </view>
+    
+    <view class="special-day" wx:if="{{lunarInfo.festival || lunarInfo.term}}">
+      <text wx:if="{{lunarInfo.festival}}">{{lunarInfo.festival}}</text>
+      <text wx:if="{{lunarInfo.festival && lunarInfo.term}}"> · </text>
+      <text wx:if="{{lunarInfo.term}}">{{lunarInfo.term}}</text>
+    </view>
+  </view>
+  
+  <!-- 今日运势 -->
+  <view class="luck-info-card">
+    <view class="section-title">今日运势</view>
+    <view class="luck-container">
+      <view class="overall-luck {{almanacInfo.todayLuck === '吉' ? 'lucky' : almanacInfo.todayLuck === '凶' ? 'unlucky' : 'neutral'}}">
+        <text class="luck-text">{{almanacInfo.todayLuck}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 宜忌 -->
+  <view class="suitavoid-info-card">
+    <view class="section-title">今日宜忌</view>
+    <view class="suitavoid-container">
+      <view class="suit-list">
+        <view class="suitavoid-title suit">宜</view>
+        <view class="activities-list">
+          <text class="activity-item" 
+                wx:for="{{almanacInfo.suit}}" 
+                wx:key="name" 
+                bindtap="showActivityDetail" 
+                data-type="suit" 
+                data-index="{{index}}">{{item.name}}</text>
+        </view>
+      </view>
+      <view class="avoid-list">
+        <view class="suitavoid-title avoid">忌</view>
+        <view class="activities-list">
+          <text class="activity-item" 
+                wx:for="{{almanacInfo.avoid}}" 
+                wx:key="name" 
+                bindtap="showActivityDetail" 
+                data-type="avoid" 
+                data-index="{{index}}">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 胎神方位 -->
+  <view class="fetus-info-card">
+    <view class="section-title">胎神方位</view>
+    <view class="fetus-container">
+      <text class="fetus-text">{{almanacInfo.fetusGod}}</text>
+    </view>
+  </view>
+  
+  <!-- 吉神凶煞 -->
+  <view class="direction-info-card">
+    <view class="section-title">吉神凶煞</view>
+    <view class="directions-container">
+      <view class="good-directions">
+        <view class="direction-title good">吉神</view>
+        <view class="direction-list">
+          <view class="direction-item" wx:for="{{almanacInfo.goodDirection}}" wx:key="name">
+            <text class="direction-name">{{item.name}}</text>
+            <text class="direction-value">{{item.direction}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="bad-directions">
+        <view class="direction-title bad">凶煞</view>
+        <view class="direction-list">
+          <view class="direction-item" wx:for="{{almanacInfo.badDirection}}" wx:key="name">
+            <text class="direction-name">{{item.name}}</text>
+            <text class="direction-value">{{item.direction}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 冲煞 -->
+  <view class="clash-info-card">
+    <view class="section-title">冲煞</view>
+    <view class="clash-container">
+      <view class="clash-item">
+        <text class="clash-label">冲</text>
+        <text class="clash-value">{{almanacInfo.clash.animal}}</text>
+      </view>
+      <view class="clash-item">
+        <text class="clash-label">煞</text>
+        <text class="clash-value">{{almanacInfo.clash.direction}}</text>
+      </view>
+      <view class="clash-item">
+        <text class="clash-label">岁煞</text>
+        <text class="clash-value">{{almanacInfo.clash.yearGod}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 彭祖百忌 -->
+  <view class="pengzu-info-card">
+    <view class="section-title">彭祖百忌</view>
+    <view class="pengzu-container">
+      <text class="pengzu-item" wx:for="{{almanacInfo.pengZu}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+  
+  <!-- 十二时辰 -->
+  <view class="hour-info-card">
+    <view class="section-title">十二时辰吉凶</view>
+    <view class="hour-toggle" bindtap="toggleHourDetail">
+      <text>{{showHourDetail ? '收起' : '展开'}}详情</text>
+      <image class="toggle-icon" src="{{showHourDetail ? '/assets/icons/arrow-up.png' : '/assets/icons/arrow-down.png'}}"></image>
+    </view>
+    
+    <view class="hour-container" wx:if="{{showHourDetail}}">
+      <view class="hour-item" wx:for="{{hourInfo}}" wx:key="hour">
+        <view class="hour-header">
+          <text class="hour-name">{{item.hour}}</text>
+          <text class="hour-luck {{item.luck === '吉' ? 'lucky' : item.luck === '凶' ? 'unlucky' : 'neutral'}}">{{item.luck}}</text>
+        </view>
+        <view class="hour-detail">
+          <view class="hour-suit">
+            <text class="hour-label">宜:</text>
+            <text class="hour-value">{{item.suit}}</text>
+          </view>
+          <view class="hour-avoid">
+            <text class="hour-label">忌:</text>
+            <text class="hour-value">{{item.avoid}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 数据来源 -->
+  <view class="data-source">
+    <text>数据来源: 中华万年历</text>
+  </view>
+  
+  <!-- 加载中提示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

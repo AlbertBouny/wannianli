@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 黄历设置</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            padding-bottom: 83px; /* 为底部导航腾出空间 */
+        }
+        
+        /* 头部导航栏 */
+        .navigation-bar {
+            background-color: #e63946;
+            color: white;
+            padding: 12px 16px;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: white;
+        }
+        
+        .page-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* 设置组样式 */
+        .settings-group {
+            background-color: white;
+            border-radius: 10px;
+            margin: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .settings-header {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .item-desc {
+            font-size: 13px;
+            color: #8e8e93;
+        }
+        
+        .item-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e9e9ea;
+            border-radius: 34px;
+            transition: .4s;
+        }
+        
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:checked + .switch-slider {
+            background-color: #34c759;
+        }
+        
+        input:checked + .switch-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .select-value {
+            font-size: 15px;
+            color: #8e8e93;
+            margin-right: 10px;
+        }
+        
+        .chevron-right {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            gap: 12px;
+        }
+        
+        .action-button {
+            background-color: white;
+            padding: 14px 0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .primary-button {
+            background-color: #e63946;
+            color: white;
+        }
+        
+        .secondary-button {
+            color: #333;
+        }
+        
+        .info-section {
+            background-color: rgba(52, 199, 89, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 12px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            border-left: 4px solid #34c759;
+        }
+        
+        /* 图标背景颜色 */
+        .bg-red {
+            background-color: #e63946;
+        }
+        
+        .bg-orange {
+            background-color: #ff9500;
+        }
+        
+        .bg-yellow {
+            background-color: #ffcc00;
+        }
+        
+        .bg-green {
+            background-color: #34c759;
+        }
+        
+        .bg-teal {
+            background-color: #5ac8fa;
+        }
+        
+        .bg-blue {
+            background-color: #007aff;
+        }
+        
+        .bg-purple {
+            background-color: #5856d6;
+        }
+        
+        .bg-pink {
+            background-color: #ff2d55;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 头部导航栏 -->
+    <div class="navigation-bar">
+        <a href="almanac.html" class="back-button"><i class="fas fa-chevron-left"></i></a>
+        <div class="page-title">黄历设置</div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 显示设置 -->
+        <div class="settings-group">
+            <div class="settings-header">显示设置</div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-red"><i class="fas fa-book"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">黄历功能</div>
+                        <div class="item-desc">显示传统黄历信息</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-orange"><i class="fas fa-calendar-check"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">宜忌提示</div>
+                        <div class="item-desc">在日历中显示当日宜忌</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-yellow"><i class="fas fa-ghost"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">吉神凶煞</div>
+                        <div class="item-desc">显示传统吉神凶煞信息</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-green"><i class="fas fa-yin-yang"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">彭祖百忌</div>
+                        <div class="item-desc">显示彭祖百忌传统忌讳</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 提醒设置 -->
+        <div class="settings-group">
+            <div class="settings-header">提醒设置</div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-blue"><i class="fas fa-bell"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">重要节日提醒</div>
+                        <div class="item-desc">传统节日和重要节气提醒</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-teal"><i class="fas fa-calendar-day"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">宜忌提醒时间</div>
+                        <div class="item-desc">设置每日宜忌提醒时间</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="select-value">早上8:00</div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 高级设置 -->
+        <div class="settings-group">
+            <div class="settings-header">高级设置</div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-purple"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">算法版本</div>
+                        <div class="item-desc">选择黄历计算算法版本</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="select-value">传统版</div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="item-left">
+                    <div class="item-icon bg-pink"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="item-info">
+                        <div class="item-title">地区设置</div>
+                        <div class="item-desc">设置区域性黄历规则</div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="select-value">中国大陆</div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 信息提示 -->
+        <div class="info-section">
+            <strong>小贴士：</strong>黄历信息源自古代历法与民间传统，仅供参考。日常生活与重要决策，请以科学理性为依据。
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <div class="action-button primary-button">恢复默认设置</div>
+            <div class="action-button secondary-button">更多黄历内容</div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </a>
+        <a href="almanac.html" class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </a>
+        <a href="weather.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </a>
+        <a href="settings.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </a>
+    </div>
+</body>
+</html> 

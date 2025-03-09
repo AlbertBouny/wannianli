@@ -1,0 +1,174 @@
+<!--pages/horoscope/horoscope.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="header-title">星座运势</text>
+  </view>
+  
+  <!-- 运势内容区 -->
+  <block wx:if="{{!showSignList && currentSign && fortune}}">
+    <!-- 当前星座信息 -->
+    <view class="sign-header" bindtap="showSignSelector">
+      <view class="sign-info">
+        <image class="sign-icon" src="{{currentSign.icon}}"></image>
+        <view class="sign-detail">
+          <view class="sign-name">{{currentSign.name}}</view>
+          <view class="sign-date">{{currentSign.date}}</view>
+        </view>
+      </view>
+      <view class="change-btn">更换</view>
+    </view>
+    
+    <!-- 运势类型选择器 -->
+    <view class="fortune-type-selector">
+      <view class="type-item {{currentFortuneType === item.id ? 'active' : ''}}" 
+            wx:for="{{fortuneTypes}}" 
+            wx:key="id" 
+            bindtap="changeFortuneType" 
+            data-type="{{item.id}}">
+        {{item.name}}
+      </view>
+    </view>
+    
+    <!-- 运势内容 -->
+    <view class="fortune-content">
+      <!-- 日期 -->
+      <view class="fortune-date">{{fortune.date}}</view>
+      
+      <!-- 整体运势 -->
+      <view class="fortune-overall">
+        <view class="section-title">整体运势</view>
+        <view class="star-rating">
+          <view class="{{getStarClass(fortune.overall, 1)}}"></view>
+          <view class="{{getStarClass(fortune.overall, 2)}}"></view>
+          <view class="{{getStarClass(fortune.overall, 3)}}"></view>
+          <view class="{{getStarClass(fortune.overall, 4)}}"></view>
+          <view class="{{getStarClass(fortune.overall, 5)}}"></view>
+        </view>
+      </view>
+      
+      <!-- 各方面运势 -->
+      <view class="fortune-aspects">
+        <view class="section-title">运势指数</view>
+        <view class="aspect-list">
+          <view class="aspect-item">
+            <view class="aspect-label">爱情</view>
+            <view class="aspect-bar-wrap">
+              <view class="aspect-bar love" style="width: {{fortune.aspects.love}}%"></view>
+            </view>
+            <view class="aspect-value">{{fortune.aspects.love}}</view>
+          </view>
+          
+          <view class="aspect-item">
+            <view class="aspect-label">事业</view>
+            <view class="aspect-bar-wrap">
+              <view class="aspect-bar career" style="width: {{fortune.aspects.career}}%"></view>
+            </view>
+            <view class="aspect-value">{{fortune.aspects.career}}</view>
+          </view>
+          
+          <view class="aspect-item">
+            <view class="aspect-label">财富</view>
+            <view class="aspect-bar-wrap">
+              <view class="aspect-bar wealth" style="width: {{fortune.aspects.wealth}}%"></view>
+            </view>
+            <view class="aspect-value">{{fortune.aspects.wealth}}</view>
+          </view>
+          
+          <view class="aspect-item">
+            <view class="aspect-label">健康</view>
+            <view class="aspect-bar-wrap">
+              <view class="aspect-bar health" style="width: {{fortune.aspects.health}}%"></view>
+            </view>
+            <view class="aspect-value">{{fortune.aspects.health}}</view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 幸运信息 -->
+      <view class="fortune-lucky">
+        <view class="section-title">幸运信息</view>
+        <view class="lucky-grid">
+          <view class="lucky-item">
+            <view class="lucky-label">幸运色</view>
+            <view class="lucky-value">{{fortune.lucky.color}}</view>
+          </view>
+          <view class="lucky-item">
+            <view class="lucky-label">幸运数字</view>
+            <view class="lucky-value">{{fortune.lucky.number}}</view>
+          </view>
+          <view class="lucky-item">
+            <view class="lucky-label">吉利方位</view>
+            <view class="lucky-value">{{fortune.lucky.direction}}</view>
+          </view>
+          <view class="lucky-item">
+            <view class="lucky-label">开运时段</view>
+            <view class="lucky-value">{{fortune.lucky.time}}</view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 运势描述 -->
+      <view class="fortune-description">
+        <view class="section-title">运势分析</view>
+        <view class="description-text">{{fortune.description}}</view>
+      </view>
+      
+      <!-- 今日建议 -->
+      <view class="fortune-suggestions">
+        <view class="section-title">今日建议</view>
+        <view class="suggestion-list">
+          <view class="suggestion-item" wx:for="{{fortune.suggestions}}" wx:key="*this">
+            <view class="suggestion-dot"></view>
+            <view class="suggestion-text">{{item}}</view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 分享按钮 -->
+      <button class="share-btn" open-type="share">分享给好友</button>
+    </view>
+  </block>
+  
+  <!-- 星座选择区 -->
+  <block wx:if="{{showSignList}}">
+    <!-- 最近使用的星座 -->
+    <view class="recent-signs" wx:if="{{recentSigns.length > 0}}">
+      <view class="list-title">最近使用</view>
+      <view class="recent-list">
+        <view class="recent-item" 
+              wx:for="{{recentSigns}}" 
+              wx:key="id" 
+              bindtap="selectSign" 
+              data-id="{{item.id}}">
+          <image class="recent-icon" src="{{item.icon}}"></image>
+          <view class="recent-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 全部星座列表 -->
+    <view class="all-signs">
+      <view class="list-title">全部星座</view>
+      <view class="sign-grid">
+        <view class="sign-grid-item" 
+              wx:for="{{signs}}" 
+              wx:key="id"
+              bindtap="selectSign" 
+              data-id="{{item.id}}">
+          <image class="sign-grid-icon" src="{{item.icon}}"></image>
+          <view class="sign-grid-info">
+            <view class="sign-grid-name">{{item.name}}</view>
+            <view class="sign-grid-date">{{item.date}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+  
+  <!-- 加载中提示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

@@ -1,0 +1,198 @@
+/* 城市选择页样式 */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  height: 100vh;
+  position: relative;
+}
+
+/* 页面头部 */
+.page-header {
+  background-color: #e63946;
+  padding: 20rpx 30rpx;
+  color: #fff;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 500;
+}
+
+/* 搜索框 */
+.search-box {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 36rpx;
+  padding: 10rpx 20rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 28rpx;
+  margin: 0 20rpx;
+}
+
+/* 搜索结果列表 */
+.search-result-list {
+  flex: 1;
+  background-color: #fff;
+}
+
+.empty-tip {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 城市列表滚动区域 */
+.city-list-scroll {
+  flex: 1;
+  height: calc(100vh - 200rpx);
+}
+
+/* 城市分组 */
+.section {
+  background-color: #fff;
+  margin-bottom: 2rpx;
+}
+
+.section-title {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  background-color: #f8f8f8;
+}
+
+/* 当前位置 */
+.current-location {
+  padding: 20rpx 30rpx;
+}
+
+.location-item {
+  display: flex;
+  align-items: center;
+}
+
+.city-name {
+  font-size: 30rpx;
+  color: #333;
+  margin-left: 16rpx;
+}
+
+.location-error {
+  padding: 20rpx 0;
+  color: #e63946;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+/* 热门城市 */
+.hot-cities {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx 15rpx;
+}
+
+.hot-city-item {
+  width: calc(33.33% - 30rpx);
+  margin: 10rpx 15rpx;
+  height: 70rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 城市项 */
+.city-item {
+  padding: 25rpx 30rpx;
+  font-size: 30rpx;
+  color: #333;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.city-item:last-child {
+  border-bottom: none;
+}
+
+.city-item:active {
+  background-color: #f5f5f5;
+}
+
+.city-group .city-item {
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+/* 字母索引条 */
+.letter-index {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 10rpx 5rpx;
+  border-radius: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.letter-item {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.letter-item.active {
+  color: #fff;
+  background-color: #e63946;
+  border-radius: 50%;
+}
+
+/* 加载中蒙层 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #f3f3f3;
+  border-top: 6rpx solid #e63946;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

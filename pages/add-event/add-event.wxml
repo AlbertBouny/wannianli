@@ -1,0 +1,179 @@
+<!--pages/add-event/add-event.wxml-->
+<view class="container">
+  <view class="form-container">
+    <!-- 事件标题 -->
+    <view class="form-group">
+      <input class="form-input title-input" 
+             placeholder="事件标题" 
+             value="{{formData.title}}" 
+             bindinput="handleInputChange" 
+             data-field="title"
+             maxlength="50"
+             focus="{{!isEdit}}"/>
+    </view>
+    
+    <!-- 日期选择 -->
+    <view class="form-group">
+      <view class="form-label">日期</view>
+      <view class="form-content">
+        <picker mode="date" 
+                value="{{formData.date}}" 
+                start="{{datePicker.start}}" 
+                end="{{datePicker.end}}" 
+                bindchange="bindDateChange">
+          <view class="picker-view">
+            <view class="picker-text">{{formData.date}}</view>
+            <view class="picker-arrow">
+              <image src="/assets/icons/arrow-right.png"></image>
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <!-- 农历信息 -->
+    <view class="lunar-info">
+      <view class="lunar-text">农历 {{lunarInfo.lunarDate}}</view>
+      <view class="suit-avoid-info">
+        <text class="suit-text">宜：{{lunarInfo.suit.join('、')}}</text>
+        <text class="avoid-text">忌：{{lunarInfo.avoid.join('、')}}</text>
+      </view>
+    </view>
+    
+    <!-- 全天事件开关 -->
+    <view class="form-group switch-group">
+      <view class="form-label">全天事件</view>
+      <view class="form-content">
+        <switch checked="{{formData.isAllDay}}" 
+                bindchange="bindAllDayChange" 
+                color="#e63946"/>
+      </view>
+    </view>
+    
+    <!-- 时间选择器 -->
+    <view class="form-group time-group" hidden="{{formData.isAllDay}}">
+      <view class="form-label">时间</view>
+      <view class="form-content time-pickers">
+        <picker mode="time" 
+                value="{{formData.startTime}}" 
+                start="{{startTimePicker.start}}" 
+                end="{{startTimePicker.end}}" 
+                bindchange="bindStartTimeChange">
+          <view class="time-picker-view">
+            <view class="time-picker-text">{{formData.startTime}}</view>
+          </view>
+        </picker>
+        <view class="time-separator">至</view>
+        <picker mode="time" 
+                value="{{formData.endTime}}" 
+                start="{{endTimePicker.start}}" 
+                end="{{endTimePicker.end}}" 
+                bindchange="bindEndTimeChange">
+          <view class="time-picker-view">
+            <view class="time-picker-text">{{formData.endTime}}</view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <!-- 地点 -->
+    <view class="form-group">
+      <view class="form-label">地点</view>
+      <view class="form-content">
+        <input class="form-input" 
+               placeholder="事件地点（选填）" 
+               value="{{formData.location}}" 
+               bindinput="handleInputChange" 
+               data-field="location"
+               maxlength="100"/>
+      </view>
+    </view>
+    
+    <!-- 备注 -->
+    <view class="form-group">
+      <view class="form-label">备注</view>
+      <view class="form-content">
+        <textarea class="form-textarea" 
+                  placeholder="备注信息（选填）" 
+                  value="{{formData.description}}" 
+                  bindinput="handleInputChange" 
+                  data-field="description"
+                  maxlength="200"/>
+      </view>
+    </view>
+    
+    <!-- 重复规则 -->
+    <view class="form-group">
+      <view class="form-label">重复</view>
+      <view class="form-content">
+        <picker mode="selector" 
+                range="{{repeatOptions}}" 
+                range-key="name" 
+                value="{{formData.repeat === 'none' ? 0 : (formData.repeat === 'daily' ? 1 : (formData.repeat === 'weekly' ? 2 : (formData.repeat === 'monthly' ? 3 : 4)))}}" 
+                bindchange="bindRepeatChange">
+          <view class="picker-view">
+            <view class="picker-text">{{formData.repeat === 'none' ? '不重复' : (formData.repeat === 'daily' ? '每天' : (formData.repeat === 'weekly' ? '每周' : (formData.repeat === 'monthly' ? '每月' : '每年')))}}</view>
+            <view class="picker-arrow">
+              <image src="/assets/icons/arrow-right.png"></image>
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <!-- 提醒时间 -->
+    <view class="form-group">
+      <view class="form-label">提醒</view>
+      <view class="form-content">
+        <picker mode="selector" 
+                range="{{reminderOptions}}" 
+                range-key="name" 
+                value="{{formData.reminderTime === '' ? 0 : (formData.reminderTime === '0' ? 1 : (formData.reminderTime === '5' ? 2 : (formData.reminderTime === '15' ? 3 : (formData.reminderTime === '30' ? 4 : (formData.reminderTime === '60' ? 5 : 6)))))}}" 
+                bindchange="bindReminderChange">
+          <view class="picker-view">
+            <view class="picker-text">{{formData.reminderTime === '' ? '不提醒' : (formData.reminderTime === '0' ? '事件开始时' : (formData.reminderTime === '5' ? '提前5分钟' : (formData.reminderTime === '15' ? '提前15分钟' : (formData.reminderTime === '30' ? '提前30分钟' : (formData.reminderTime === '60' ? '提前1小时' : '提前1天')))))}}</view>
+            <view class="picker-arrow">
+              <image src="/assets/icons/arrow-right.png"></image>
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <!-- 颜色选择 -->
+    <view class="form-group">
+      <view class="form-label">颜色</view>
+      <view class="form-content">
+        <view class="color-selector">
+          <view class="color-option {{formData.color === item.value ? 'selected' : ''}}" 
+                wx:for="{{colorOptions}}" 
+                wx:key="value" 
+                style="background-color: {{item.value}}" 
+                bindtap="selectColor" 
+                data-color="{{item.value}}">
+            <icon class="color-check" type="success_no_circle" size="16" color="#fff" wx:if="{{formData.color === item.value}}"/>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons">
+    <block wx:if="{{isEdit}}">
+      <button class="action-button delete-button" bindtap="deleteEvent">删除</button>
+      <button class="action-button cancel-button" bindtap="cancelEdit">取消</button>
+      <button class="action-button submit-button" bindtap="submitForm">保存</button>
+    </block>
+    <block wx:else>
+      <button class="action-button cancel-button" bindtap="cancelEdit">取消</button>
+      <button class="action-button submit-button" bindtap="submitForm">添加</button>
+    </block>
+  </view>
+  
+  <!-- 加载遮罩 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

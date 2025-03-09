@@ -1,0 +1,532 @@
+<think>我需要为中华万年历小程序项目创建一个 cursorrules 文件，这通常是一个用于定义项目代码规范、文件组织结构和开发约定的配置文件。这对于团队协作开发非常重要，能确保代码风格一致，便于维护。
+
+对于微信小程序项目，我应该包含以下几个方面：
+
+1. 项目结构规范 - 如何组织文件夹和文件
+2. 命名规范 - 变量、函数、文件等的命名规则
+3. 代码风格 - 缩进、空格、换行等格式规范
+4. 注释规范 - 如何书写有效的注释
+5. Git工作流 - 分支管理、提交信息格式等
+6. 性能优化规则 - 小程序特有的性能考量
+7. 安全规范 - 数据处理和API调用的安全规则
+
+我将为这个项目创建一个全面的 cursorrules 文件，确保开发团队有明确的指导原则。</think># 中华万年历小程序项目 - 开发规范 (cursorrules)
+
+## 1. 项目结构规范
+
+```
+wannianli-miniprogram/
+├── components/             # 公共组件
+│   ├── calendar/           # 日历相关组件
+│   ├── weather/            # 天气相关组件
+│   └── ui/                 # 通用UI组件
+├── pages/                  # 小程序页面
+│   ├── home/               # 日历主页
+│   ├── day-detail/         # 日期详情页
+│   ├── add-event/          # 添加日程页
+│   ├── weather/            # 天气页面
+│   ├── location-select/    # 城市管理页
+│   ├── almanac/            # 黄历详情页
+│   ├── almanac-settings/   # 黄历设置页
+│   ├── horoscope/          # 星座运势页
+│   ├── search/             # 搜索页
+│   └── settings/           # 个人设置页
+├── utils/                  # 工具函数
+│   ├── calendar.js         # 日历计算工具
+│   ├── lunar.js            # 农历转换工具
+│   ├── almanac.js          # 黄历数据处理工具
+│   ├── location.js         # 位置服务工具
+│   └── request.js          # 网络请求封装
+├── services/               # 业务服务层
+│   ├── api.js              # API接口定义
+│   ├── user.js             # 用户相关服务
+│   ├── event.js            # 日程相关服务
+│   ├── weather.js          # 天气相关服务
+│   └── sync.js             # 数据同步服务
+├── models/                 # 数据模型
+│   ├── user.js             # 用户模型
+│   ├── event.js            # 日程模型
+│   ├── city.js             # 城市模型
+│   └── settings.js         # 设置模型
+├── assets/                 # 静态资源
+│   ├── images/             # 图片资源
+│   ├── icons/              # 图标资源
+│   └── styles/             # 公共样式
+├── config/                 # 配置文件
+│   ├── api-config.js       # API配置
+│   ├── theme-config.js     # 主题配置
+│   └── app-config.js       # 应用配置
+├── app.js                  # 小程序入口文件
+├── app.json                # 小程序全局配置
+├── app.wxss                # 小程序全局样式
+├── project.config.json     # 项目配置文件
+└── sitemap.json            # 小程序索引配置
+```
+
+## 2. 命名规范
+
+### 2.1 文件与文件夹命名
+
+- 小程序页面文件夹使用 kebab-case 命名：`day-detail`
+- 组件文件夹使用 camelCase 命名：`calendarCard`
+- WXML/WXSS/JS/JSON文件与所在文件夹保持同名
+- 工具类文件使用 camelCase 命名：`dateUtil.js`
+- 图片资源使用 kebab-case 命名并添加类型前缀：`icon-home.png`、`bg-header.jpg`
+
+### 2.2 变量命名
+
+- 使用 camelCase 命名变量和函数：`userData`、`getUserInfo()`
+- 使用 PascalCase 命名类和组件：`Calendar`、`WeatherCard`
+- 使用 UPPER_SNAKE_CASE 命名常量：`MAX_EVENT_COUNT`
+- 布尔类型变量使用 is/has/should 前缀：`isVip`、`hasNewMessage`
+- 私有属性和方法使用下划线前缀：`_privateMethod()`
+
+### 2.3 组件属性命名
+
+- 组件属性使用 camelCase：`bindTapEvent`、`eventData`
+- 组件事件处理函数使用 on 前缀：`onDateSelect`、`onWeatherUpdate`
+- 组件样式类使用 kebab-case：`calendar-container`、`date-cell`
+
+## 3. 代码风格规范
+
+### 3.1 WXML规范
+
+- 标签属性顺序：`id` → `class` → `style` → 数据绑定 → 事件
+- 数据绑定使用双大括号：`{{dataName}}`
+- 保持标签闭合，空标签使用自闭合：`<view />`
+- 使用4个空格缩进
+- 多属性标签每个属性独占一行
+
+```html
+<view
+    class="calendar-day {{isToday ? 'today' : ''}}"
+    data-date="{{date}}"
+    bind:tap="onDayTap"
+>
+    <text>{{day}}</text>
+    <text class="lunar-day">{{lunarDay}}</text>
+</view>
+```
+
+### 3.2 WXSS规范
+
+- 使用4个空格缩进
+- 类名使用 kebab-case：`.header-title`
+- 每条规则大括号前保留一个空格
+- 属性冒号后保留一个空格
+- 每条属性声明以分号结尾
+- 合理使用注释分组样式规则
+
+```css
+/* 日历头部样式 */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16rpx 24rpx;
+    background-color: #e63946;
+}
+
+.header-title {
+    font-size: 32rpx;
+    color: #ffffff;
+    font-weight: 500;
+}
+```
+
+### 3.3 JavaScript规范
+
+- 使用ES6语法
+- 使用4个空格缩进
+- 使用单引号定义字符串
+- 每行代码结尾添加分号
+- 块语句大括号前保留一个空格
+- 运算符两侧保留一个空格
+- 函数参数逗号后保留一个空格
+- 代码块之间使用空行分隔
+- 每行代码长度不超过100个字符
+
+```javascript
+/**
+ * 获取指定日期的农历信息
+ * @param {Date} date - 公历日期对象
+ * @return {Object} 农历信息对象
+ */
+function getLunarInfo(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    
+    // 计算农历日期
+    const lunarDate = convertSolarToLunar(year, month, day);
+    
+    return {
+        lunarYear: lunarDate.year,
+        lunarMonth: lunarDate.month,
+        lunarDay: lunarDate.day,
+        zodiac: getZodiac(lunarDate.year),
+        term: getSolarTerm(date)
+    };
+}
+```
+
+### 3.4 JSON规范
+
+- 使用4个空格缩进
+- 属性名使用双引号包裹
+- 属性值为字符串时使用双引号包裹
+- 不使用尾随逗号
+- 文件以换行符结尾
+
+```json
+{
+    "navigationBarTitleText": "中华万年历",
+    "navigationBarBackgroundColor": "#e63946",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f8f9fa",
+    "usingComponents": {
+        "calendar": "/components/calendar/calendar",
+        "weather-card": "/components/weather/weatherCard"
+    }
+}
+```
+
+## 4. 注释规范
+
+### 4.1 代码注释
+
+- 单行注释使用 `//`，注释内容与 `//` 之间保留一个空格
+- 多行注释使用 `/* */`，每行以 `*` 开头对齐
+- 函数和类使用 JSDoc 风格注释，包含参数、返回值和功能描述
+- 复杂逻辑块前添加注释说明
+- WXML中的注释使用 `<!-- -->`
+- WXSS中的注释使用 `/* */`
+
+```javascript
+/**
+ * 计算两个日期之间的天数差异
+ * @param {Date} startDate - 开始日期
+ * @param {Date} endDate - 结束日期
+ * @return {Number} 两个日期之间的天数
+ */
+function getDaysDifference(startDate, endDate) {
+    // 转换为毫秒时间戳并计算差值
+    const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+    
+    // 将时间差转换为天数并返回
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+}
+```
+
+### 4.2 TODO注释
+
+- 使用 `// TODO:` 标记需要未来处理的代码
+- 添加具体说明和计划完成时间
+- 添加负责人信息
+
+```javascript
+// TODO: 优化日期选择算法，提高性能 - 张三 (2023-12-31)
+function findBestDate() {
+    // 临时实现，待优化
+    return getRandomDateInRange(startDate, endDate);
+}
+```
+
+## 5. Git工作流
+
+### 5.1 分支管理
+
+- `master`: 主分支，稳定版本
+- `develop`: 开发分支，最新功能集成
+- `feature/xxx`: 功能分支，新功能开发
+- `bugfix/xxx`: 修复分支，修复存在的问题
+- `release/x.x.x`: 发布分支，版本发布准备
+
+### 5.2 提交信息格式
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+- **类型(type)**：
+  - `feat`：新功能
+  - `fix`：bug修复
+  - `docs`：文档更新
+  - `style`：代码风格修改（不影响功能）
+  - `refactor`：代码重构
+  - `perf`：性能优化
+  - `test`：测试相关
+  - `chore`：构建过程或辅助工具变动
+
+- **范围(scope)**：变更影响的功能模块
+- **主题(subject)**：简短描述，不超过50个字符
+- **正文(body)**：详细说明，可选
+- **页脚(footer)**：关联的问题ID，可选
+
+示例：
+```
+feat(calendar): 新增农历节日显示功能
+
+- 在日历组件中添加农历节日标记
+- 优化节日显示样式
+- 增加节日点击查看详情功能
+
+Closes #123
+```
+
+### 5.3 代码审查规则
+
+- 每个功能分支合并前必须通过至少一人代码审查
+- 审查重点：
+  - 代码是否符合项目规范
+  - 逻辑是否正确
+  - 是否有性能问题
+  - 是否有安全隐患
+  - 是否按需添加注释和文档
+
+## 6. 小程序特有规范
+
+### 6.1 页面与组件生命周期
+
+- 合理使用生命周期函数，避免在不必要的生命周期中执行重逻辑
+- 在 `onLoad` 中完成初始化和数据请求
+- 在 `onShow` 中更新动态数据
+- 在 `onHide` 和 `onUnload` 中清理资源和取消订阅
+- 组件使用 `lifetimes` 属性定义生命周期方法
+
+```javascript
+Page({
+    data: {
+        // 页面数据
+    },
+
+    onLoad(options) {
+        // 页面加载时执行，只执行一次
+        this.initPageData(options);
+    },
+
+    onShow() {
+        // 页面显示时执行，可能执行多次
+        this.refreshData();
+    },
+
+    onHide() {
+        // 页面隐藏时执行
+        this.cancelPendingTasks();
+    },
+
+    onUnload() {
+        // 页面卸载时执行
+        this.releaseResources();
+    }
+});
+```
+
+### 6.2 数据绑定与更新
+
+- 使用 `this.setData()` 方法更新页面数据
+- 避免频繁调用 `setData`，合并多次数据更新
+- 只传递必要的数据，避免整个 data 对象传递
+- 使用路径表达式更新嵌套数据结构
+- 避免双向绑定导致的性能问题
+
+```javascript
+// 推荐
+this.setData({
+    'user.name': 'Zhang San',
+    'user.age': 28
+});
+
+// 不推荐
+this.setData({
+    user: {
+        ...this.data.user,
+        name: 'Zhang San',
+        age: 28
+    }
+});
+```
+
+### 6.3 事件处理
+
+- 事件处理函数使用统一的命名格式：`handle` + 事件名 + 操作
+- 使用事件代理减少事件绑定数量
+- 避免在事件处理函数中执行耗时操作
+- 合理使用事件捕获和冒泡
+
+```javascript
+Page({
+    // 推荐的命名格式
+    handleCalendarDateTap(e) {
+        const { date } = e.currentTarget.dataset;
+        this.navigateToDateDetail(date);
+    },
+    
+    handleWeatherRefresh() {
+        this.refreshWeatherData();
+    }
+});
+```
+
+### 6.4 性能优化
+
+- 合理使用 `wx:if` 和 `hidden` 控制元素显示
+- 长列表使用虚拟列表或分页加载
+- 懒加载图片和其他资源
+- 使用 `wxs` 处理简单逻辑，减轻 JavaScript 线程负担
+- 避免频繁创建临时对象
+- 定时器和事件监听器在页面卸载时清理
+- 合理使用缓存减少网络请求
+
+```javascript
+// WXS 使用示例 (format.wxs)
+function formatDate(timestamp) {
+    var date = getDate(timestamp);
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+}
+
+module.exports = {
+    formatDate: formatDate
+};
+```
+
+```html
+<!-- 在WXML中引用WXS -->
+<wxs src="../../utils/format.wxs" module="format" />
+<view>{{format.formatDate(timestamp)}}</view>
+```
+
+## 7. 安全规范
+
+### 7.1 数据安全
+
+- 敏感数据不存储在本地存储中
+- 使用微信提供的加密API加密存储敏感数据
+- 清除用户退出后的敏感信息
+- 避免将密钥硬编码在代码中
+- 定期清理不必要的缓存数据
+
+### 7.2 网络请求安全
+
+- 使用HTTPS协议进行网络通信
+- 实现请求签名机制防止篡改
+- 敏感接口使用 token 认证
+- 避免在URL中传递敏感信息
+- 实现请求超时和错误重试机制
+
+### 7.3 第三方组件与API使用
+
+- 谨慎使用第三方组件，评估安全风险
+- 只请求必要的权限，遵循最小权限原则
+- 合规使用用户个人信息，遵守隐私政策
+- 第三方SDK更新到最新安全版本
+
+## 8. 测试规范
+
+### 8.1 单元测试
+
+- 为工具函数和核心业务逻辑编写单元测试
+- 测试文件与源文件放在同级目录下，命名为 `[filename].test.js`
+- 使用 Jest 或其他测试框架
+- 保持单元测试的独立性，避免测试之间的依赖
+
+### 8.2 组件测试
+
+- 测试组件的渲染结果和基本交互
+- 模拟组件依赖的API和服务
+- 关注组件的边界条件和异常情况
+
+### 8.3 集成测试
+
+- 测试页面之间的导航和数据传递
+- 测试与后端API的交互
+- 使用模拟数据测试各种业务场景
+
+### 8.4 UI测试
+
+- 使用微信开发者工具自动化测试功能
+- 测试关键用户流程
+- 对比UI变更前后的差异
+
+## 9. 文档规范
+
+### 9.1 API文档
+
+- 使用JSDoc格式为API函数添加注释
+- 说明函数功能、参数、返回值和异常
+- 提供使用示例
+
+### 9.2 组件文档
+
+- 提供组件功能说明
+- 列出组件属性、事件和方法
+- 提供基本使用示例
+- 说明组件依赖
+
+### 9.3 项目文档
+
+- README.md 包含项目概述、安装说明和基本用法
+- CHANGELOG.md 记录版本变更
+- 架构文档说明项目结构和技术选型
+- 贡献指南说明如何参与项目开发
+
+## 10. 发布流程
+
+### 10.1 预发布检查清单
+
+- 代码审查已完成
+- 自动化测试通过
+- 性能测试符合预期
+- 安全审查无重大问题
+- 文档已更新
+
+### 10.2 版本号规则
+
+遵循语义化版本（SemVer）规范：
+
+- 主版本号（Major）：不兼容的 API 变更
+- 次版本号（Minor）：向下兼容的功能性新增
+- 修订号（Patch）：向下兼容的问题修正
+
+格式：`v[Major].[Minor].[Patch]`，如 `v1.2.3`
+
+### 10.3 发布渠道
+
+- 开发版：内部测试使用
+- 体验版：灰度测试和用户体验反馈
+- 正式版：所有用户可见
+
+## 11. 需求理解与实现规范
+
+### 11.1 需求文档路径
+
+- **产品需求文档(PRD)**: `pages/prd.md`
+
+### 11.2 需求遵循原则
+
+- 所有开发必须以 PRD 文档为基础，确保实现符合产品需求
+- 在实现过程中有疑问时，应优先参考 PRD 文档
+- 开发前必须通读完整 PRD，理解产品整体架构和功能逻辑
+- 功能实现的优先级遵循 PRD 中的项目路线图和阶段划分
+- 遇到 PRD 中的需求与技术实现冲突时，应与产品经理沟通并记录调整
+
+### 11.3 需求变更流程
+
+- PRD 变更需要通过正式评审流程
+- 变更必须在版本控制系统中追踪记录
+- 重大需求变更需要更新相关设计文档和开发计划
+- 所有团队成员应定期检查 PRD 更新，确保了解最新需求
+
+### 11.4 跨功能协作
+
+- 根据 PRD 中的页面划分和功能模块，明确各团队职责
+- 遵循 PRD 中定义的数据模型和 API 接口规范
+- 共同参考 PRD 中的用户流程和交互设计
+- 定期举行需求同步会议，确保对 PRD 的理解一致
+
+---
+
+本规范文档与产品需求文档(PRD)共同构成项目开发的指导性文件，所有开发活动应同时遵循这两份文档的规定。

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 天气</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+        
+        /* 天气页面特定样式 */
+        .location-bar {
+            background-color: #e63946;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .location-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .location-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .location-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .location-right {
+            font-size: 15px;
+        }
+        
+        .weather-card {
+            margin: 12px;
+            border-radius: 12px;
+            background-color: white;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .current-weather {
+            padding: 24px 16px;
+            text-align: center;
+            background: linear-gradient(120deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .weather-temp {
+            font-size: 60px;
+            font-weight: 200;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        
+        .weather-icon {
+            font-size: 48px;
+            margin: 12px 0;
+        }
+        
+        .weather-desc {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .weather-details {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-icon {
+            margin-right: 5px;
+        }
+        
+        .hourly-forecast {
+            padding: 16px;
+            overflow-x: auto;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .hourly-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .hourly-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .hourly-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+        
+        .hourly-time {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .hourly-icon {
+            font-size: 24px;
+            color: #5ac8fa;
+            margin-bottom: 8px;
+        }
+        
+        .hourly-temp {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .daily-forecast {
+            padding: 16px;
+        }
+        
+        .daily-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .daily-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .daily-item:last-child {
+            border-bottom: none;
+        }
+        
+        .daily-day {
+            width: 80px;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .daily-icon {
+            font-size: 22px;
+            color: #5ac8fa;
+        }
+        
+        .daily-temp {
+            display: flex;
+            align-items: center;
+            width: 120px;
+        }
+        
+        .temp-bar {
+            flex: 1;
+            height: 4px;
+            background: linear-gradient(90deg, #5ac8fa, #ff9500);
+            border-radius: 2px;
+            margin: 0 10px;
+        }
+        
+        .temp-min {
+            color: #5ac8fa;
+            font-size: 14px;
+            width: 30px;
+            text-align: right;
+        }
+        
+        .temp-max {
+            color: #ff9500;
+            font-size: 14px;
+            width: 30px;
+        }
+        
+        .air-quality {
+            margin: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .air-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .air-title i {
+            margin-right: 8px;
+            color: #34c759;
+        }
+        
+        .air-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .air-item {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .air-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .air-value {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .weather-alert {
+            margin: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            background-color: #fff8f5;
+            border-left: 4px solid #ff9500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alert-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff9500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert-title i {
+            margin-right: 8px;
+        }
+        
+        .alert-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 位置栏 -->
+        <div class="location-bar">
+            <div class="location-left">
+                <div class="location-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="location-name">北京市 朝阳区</div>
+            </div>
+            <div class="location-right">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+        
+        <!-- 当前天气卡片 -->
+        <div class="weather-card">
+            <div class="current-weather">
+                <div class="weather-temp">26°</div>
+                <div class="weather-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="weather-desc">多云转晴</div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-tint"></i></div>
+                        <div>湿度 53%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon"><i class="fas fa-wind"></i></div>
+                        <div>东风 3级</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 小时预报 -->
+            <div class="hourly-forecast">
+                <div class="hourly-title">24小时预报</div>
+                <div class="hourly-container">
+                    <div class="hourly-item">
+                        <div class="hourly-time">现在</div>
+                        <div class="hourly-icon"><i class="fas fa-cloud-sun"></i></div>
+                        <div class="hourly-temp">26°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">16:00</div>
+                        <div class="hourly-icon"><i class="fas fa-sun"></i></div>
+                        <div class="hourly-temp">27°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">17:00</div>
+                        <div class="hourly-icon"><i class="fas fa-sun"></i></div>
+                        <div class="hourly-temp">26°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">18:00</div>
+                        <div class="hourly-icon"><i class="fas fa-sun"></i></div>
+                        <div class="hourly-temp">25°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">19:00</div>
+                        <div class="hourly-icon"><i class="fas fa-cloud"></i></div>
+                        <div class="hourly-temp">23°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">20:00</div>
+                        <div class="hourly-icon"><i class="fas fa-cloud"></i></div>
+                        <div class="hourly-temp">21°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">21:00</div>
+                        <div class="hourly-icon"><i class="fas fa-cloud"></i></div>
+                        <div class="hourly-temp">19°</div>
+                    </div>
+                    <div class="hourly-item">
+                        <div class="hourly-time">22:00</div>
+                        <div class="hourly-icon"><i class="fas fa-cloud-moon"></i></div>
+                        <div class="hourly-temp">18°</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 每日预报 -->
+            <div class="daily-forecast">
+                <div class="daily-title">7天预报</div>
+                <div class="daily-item">
+                    <div class="daily-day">今天</div>
+                    <div class="daily-icon"><i class="fas fa-cloud-sun"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">16°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">27°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周二</div>
+                    <div class="daily-icon"><i class="fas fa-sun"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">17°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">29°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周三</div>
+                    <div class="daily-icon"><i class="fas fa-sun"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">18°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">30°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周四</div>
+                    <div class="daily-icon"><i class="fas fa-cloud"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">19°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">28°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周五</div>
+                    <div class="daily-icon"><i class="fas fa-cloud-sun-rain"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">17°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">25°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周六</div>
+                    <div class="daily-icon"><i class="fas fa-cloud-rain"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">16°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">22°</div>
+                    </div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-day">周日</div>
+                    <div class="daily-icon"><i class="fas fa-cloud"></i></div>
+                    <div class="daily-temp">
+                        <div class="temp-min">15°</div>
+                        <div class="temp-bar"></div>
+                        <div class="temp-max">24°</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 空气质量 -->
+        <div class="air-quality">
+            <div class="air-title">
+                <i class="fas fa-leaf"></i>
+                <span>空气质量</span>
+            </div>
+            <div class="air-grid">
+                <div class="air-item">
+                    <div class="air-label">AQI</div>
+                    <div class="air-value">65</div>
+                </div>
+                <div class="air-item">
+                    <div class="air-label">PM2.5</div>
+                    <div class="air-value">28</div>
+                </div>
+                <div class="air-item">
+                    <div class="air-label">PM10</div>
+                    <div class="air-value">42</div>
+                </div>
+                <div class="air-item">
+                    <div class="air-label">SO₂</div>
+                    <div class="air-value">8</div>
+                </div>
+                <div class="air-item">
+                    <div class="air-label">NO₂</div>
+                    <div class="air-value">23</div>
+                </div>
+                <div class="air-item">
+                    <div class="air-label">O₃</div>
+                    <div class="air-value">86</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 天气预警 -->
+        <div class="weather-alert">
+            <div class="alert-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>高温预警</span>
+            </div>
+            <div class="alert-content">
+                今日最高温度可能达到 30°C，请注意防暑降温，减少户外活动时间，补充水分，避免中暑。
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </div>
+        <div class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+</body>
+</html> 

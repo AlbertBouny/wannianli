@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 模板页面</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            padding-bottom: 83px; /* 为底部导航腾出空间 */
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 页面内容放这里 -->
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </a>
+        <a href="almanac.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </a>
+        <a href="weather.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </a>
+        <a href="settings.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </a>
+    </div>
+</body>
+</html> 

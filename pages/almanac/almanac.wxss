@@ -1,0 +1,468 @@
+/* pages/almanac/almanac.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 30rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 日期导航区域样式 */
+.date-navigator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #e63946;
+  color: white;
+}
+
+.date-arrow {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow-icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date-text {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.weekday-text {
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-top: 4rpx;
+}
+
+.settings-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings-icon {
+  width: 30rpx;
+  height: 30rpx;
+  opacity: 0.8;
+}
+
+/* 卡片通用样式 */
+.lunar-info-card,
+.luck-info-card,
+.suitavoid-info-card,
+.fetus-info-card,
+.direction-info-card,
+.clash-info-card,
+.pengzu-info-card,
+.hour-info-card {
+  margin: 20rpx 20rpx 0;
+  background-color: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-left: 20rpx;
+  border-left: 8rpx solid #e63946;
+  line-height: 1.2;
+}
+
+/* 农历信息卡片样式 */
+.lunar-info-card {
+  margin-top: -30rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
+  background-color: white;
+  padding: 30rpx 20rpx;
+  z-index: 1;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.lunar-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.lunar-year {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 6rpx;
+}
+
+.zodiac-text {
+  margin-left: 10rpx;
+  color: #e63946;
+}
+
+.lunar-month-day {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.ganzhi-info {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.ganzhi-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ganzhi-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+}
+
+.ganzhi-value {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.special-day {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #e63946;
+  font-weight: 500;
+}
+
+/* 今日运势卡片样式 */
+.luck-container {
+  display: flex;
+  justify-content: center;
+  padding: 30rpx 0;
+}
+
+.overall-luck {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.luck-text {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.lucky {
+  background-color: #e63946;
+}
+
+.unlucky {
+  background-color: #2a9d8f;
+}
+
+.neutral {
+  background-color: #e9c46a;
+}
+
+/* 宜忌卡片样式 */
+.suitavoid-container {
+  display: flex;
+  padding: 20rpx 0;
+}
+
+.suit-list, .avoid-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.suit-list {
+  margin-right: 10rpx;
+}
+
+.avoid-list {
+  margin-left: 10rpx;
+}
+
+.suitavoid-title {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.suit {
+  background-color: #e63946;
+}
+
+.avoid {
+  background-color: #2a9d8f;
+}
+
+.activities-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.activity-item {
+  background-color: #f5f5f5;
+  padding: 10rpx 20rpx;
+  margin: 10rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 胎神方位卡片样式 */
+.fetus-container {
+  padding: 20rpx 0;
+  text-align: center;
+}
+
+.fetus-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 吉神凶煞卡片样式 */
+.directions-container {
+  display: flex;
+  padding: 20rpx 0;
+}
+
+.good-directions, .bad-directions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.direction-title {
+  margin-bottom: 20rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.good {
+  color: #e63946;
+}
+
+.bad {
+  color: #2a9d8f;
+}
+
+.direction-list {
+  width: 100%;
+}
+
+.direction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10rpx 30rpx;
+}
+
+.direction-name {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.direction-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 冲煞卡片样式 */
+.clash-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx 0;
+}
+
+.clash-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clash-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+}
+
+.clash-value {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 彭祖百忌卡片样式 */
+.pengzu-container {
+  padding: 20rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pengzu-item {
+  font-size: 28rpx;
+  color: #333;
+  margin: 10rpx 0;
+}
+
+/* 十二时辰卡片样式 */
+.hour-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10rpx 0;
+  color: #666;
+  font-size: 26rpx;
+}
+
+.toggle-icon {
+  width: 20rpx;
+  height: 20rpx;
+  margin-left: 10rpx;
+}
+
+.hour-container {
+  padding: 20rpx 0;
+}
+
+.hour-item {
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 10rpx;
+}
+
+.hour-item:last-child {
+  margin-bottom: 0;
+}
+
+.hour-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.hour-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.hour-luck {
+  padding: 6rpx 16rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: white;
+}
+
+.hour-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.hour-suit, .hour-avoid {
+  display: flex;
+  margin-top: 10rpx;
+}
+
+.hour-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 60rpx;
+}
+
+.hour-value {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 数据来源样式 */
+.data-source {
+  text-align: center;
+  font-size: 22rpx;
+  color: #999;
+  padding: 30rpx 0;
+}
+
+/* 加载遮罩样式 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e63946;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

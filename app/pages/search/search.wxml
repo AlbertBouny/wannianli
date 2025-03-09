@@ -1,0 +1,228 @@
+<!-- 搜索页面 -->
+<view class="container">
+  <!-- 搜索头部 -->
+  <view class="search-header">
+    <view class="back-button" bindtap="back">
+      <text class="iconfont icon-back"></text>
+    </view>
+    
+    <view class="search-container">
+      <text class="iconfont icon-search search-icon"></text>
+      <input 
+        class="search-input" 
+        value="{{query}}" 
+        placeholder="搜索节日、节气、日程..." 
+        confirm-type="search"
+        bindinput="onInputChange"
+        bindconfirm="search"
+        focus="true"
+      />
+      <view class="clear-button" bindtap="clearInput" wx:if="{{showClearButton}}">
+        <text class="iconfont icon-clear"></text>
+      </view>
+      <view class="voice-button" bindtap="voiceSearch">
+        <text class="iconfont icon-voice"></text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 过滤器 -->
+  <scroll-view class="search-filters" scroll-x="true" enhanced="true" show-scrollbar="false">
+    <view 
+      wx:for="{{filters}}" 
+      wx:key="id"
+      class="filter-chip {{activeFilter === item.id ? 'active' : ''}}"
+      bindtap="changeFilter"
+      data-id="{{item.id}}"
+    >
+      {{item.name}}
+    </view>
+  </scroll-view>
+  
+  <!-- 内容区域 -->
+  <scroll-view class="content-area" scroll-y="true">
+    <!-- 搜索历史 -->
+    <view class="search-history" wx:if="{{showHistory && searchHistory.length > 0}}">
+      <view class="section-header">
+        <view class="section-title">搜索历史</view>
+        <view class="section-action" bindtap="clearSearchHistory">清空</view>
+      </view>
+      
+      <view 
+        wx:for="{{searchHistory}}" 
+        wx:key="*this"
+        class="history-item"
+        bindtap="onHistoryItemTap"
+        data-query="{{item}}"
+      >
+        <text class="iconfont icon-history history-icon"></text>
+        <view class="history-text">{{item}}</view>
+      </view>
+    </view>
+    
+    <!-- 搜索结果 -->
+    <view class="search-results" wx:if="{{searching}}">
+      <!-- 节气结果 -->
+      <view class="result-category" wx:if="{{searchResults.jieqi.length > 0 && (activeFilter === 'all' || activeFilter === 'jieqi')}}">
+        <view class="category-header">
+          <text class="iconfont icon-jieqi category-icon"></text>
+          节气
+        </view>
+        <view class="result-card">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults.jieqi}}" 
+            wx:key="id"
+            bindtap="onResultItemTap"
+            data-type="jieqi"
+            data-id="{{item.id}}"
+            data-date="{{item.date}}"
+          >
+            <view class="result-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="result-content">
+              <view class="result-title">{{item.title}}</view>
+              <view class="result-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 节日结果 -->
+      <view class="result-category" wx:if="{{searchResults.festival.length > 0 && (activeFilter === 'all' || activeFilter === 'festival')}}">
+        <view class="category-header">
+          <text class="iconfont icon-festival category-icon"></text>
+          节日
+        </view>
+        <view class="result-card">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults.festival}}" 
+            wx:key="id"
+            bindtap="onResultItemTap"
+            data-type="festival"
+            data-id="{{item.id}}"
+            data-date="{{item.date}}"
+          >
+            <view class="result-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="result-content">
+              <view class="result-title">{{item.title}}</view>
+              <view class="result-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 黄历结果 -->
+      <view class="result-category" wx:if="{{searchResults.almanac.length > 0 && (activeFilter === 'all' || activeFilter === 'almanac')}}">
+        <view class="category-header">
+          <text class="iconfont icon-almanac category-icon"></text>
+          黄历
+        </view>
+        <view class="result-card">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults.almanac}}" 
+            wx:key="id"
+            bindtap="onResultItemTap"
+            data-type="almanac"
+            data-id="{{item.id}}"
+            data-date="{{item.date}}"
+          >
+            <view class="result-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="result-content">
+              <view class="result-title">{{item.title}}</view>
+              <view class="result-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 日程结果 -->
+      <view class="result-category" wx:if="{{searchResults.event.length > 0 && (activeFilter === 'all' || activeFilter === 'event')}}">
+        <view class="category-header">
+          <text class="iconfont icon-event category-icon"></text>
+          日程
+        </view>
+        <view class="result-card">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults.event}}" 
+            wx:key="id"
+            bindtap="onResultItemTap"
+            data-type="event"
+            data-id="{{item.id}}"
+            data-date="{{item.date}}"
+          >
+            <view class="result-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="result-content">
+              <view class="result-title">{{item.title}}</view>
+              <view class="result-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 日期结果 -->
+      <view class="result-category" wx:if="{{searchResults.date.length > 0 && (activeFilter === 'all' || activeFilter === 'date')}}">
+        <view class="category-header">
+          <text class="iconfont icon-date category-icon"></text>
+          日期
+        </view>
+        <view class="result-card">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults.date}}" 
+            wx:key="id"
+            bindtap="onResultItemTap"
+            data-type="date"
+            data-id="{{item.id}}"
+            data-date="{{item.date}}"
+          >
+            <view class="result-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="result-content">
+              <view class="result-title">{{item.title}}</view>
+              <view class="result-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 无搜索结果 -->
+      <view class="no-result" wx:if="{{!hasResult && searching}}">
+        <view class="no-result-icon">
+          <text class="iconfont icon-no-result"></text>
+        </view>
+        <view class="no-result-text">没有找到相关内容</view>
+        <view class="no-result-sub-text">试试以下内容</view>
+        
+        <view class="recommendation-list">
+          <view 
+            class="recommendation-item" 
+            wx:for="{{recommendations}}" 
+            wx:key="id"
+            bindtap="onRecommendTap"
+            data-id="{{item.id}}"
+          >
+            <view class="recommend-icon">
+              <text class="iconfont icon-{{item.icon}}"></text>
+            </view>
+            <view class="recommend-content">
+              <view class="recommend-title">{{item.title}}</view>
+              <view class="recommend-desc">{{item.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view> 

@@ -1,0 +1,111 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <view class="search-input-box">
+      <icon type="search" size="16" color="#999"></icon>
+      <input 
+        class="search-input" 
+        value="{{searchText}}" 
+        placeholder="搜索日期、节日、事件或黄历" 
+        confirm-type="search" 
+        bindinput="onInput" 
+        bindconfirm="doSearch"
+      />
+      <icon 
+        wx:if="{{searchText.length > 0}}" 
+        type="clear" 
+        size="16" 
+        color="#999" 
+        bindtap="clearInput"
+      ></icon>
+    </view>
+    <view class="search-button" bindtap="doSearch">搜索</view>
+  </view>
+  
+  <!-- 搜索历史和热门搜索（无搜索结果时显示） -->
+  <block wx:if="{{!showResults}}">
+    <!-- 搜索历史 -->
+    <view class="search-section" wx:if="{{searchHistory.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">搜索历史</text>
+        <text class="clear-history" bindtap="clearSearchHistory">清空</text>
+      </view>
+      <view class="tag-list">
+        <view 
+          class="tag" 
+          wx:for="{{searchHistory}}" 
+          wx:key="*this" 
+          bindtap="tapSearchItem" 
+          data-keyword="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+    
+    <!-- 热门搜索 -->
+    <view class="search-section">
+      <view class="section-header">
+        <text class="section-title">热门搜索</text>
+      </view>
+      <view class="tag-list">
+        <view 
+          class="tag hot-tag" 
+          wx:for="{{hotSearches}}" 
+          wx:key="*this" 
+          bindtap="tapSearchItem" 
+          data-keyword="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+  </block>
+  
+  <!-- 搜索结果 -->
+  <block wx:if="{{showResults}}">
+    <!-- 分类选择器 -->
+    <scroll-view class="category-scroll" scroll-x="true">
+      <view class="category-list">
+        <view 
+          class="category-item {{currentCategory === item.id ? 'active' : ''}}" 
+          wx:for="{{categories}}" 
+          wx:key="id" 
+          bindtap="changeCategory" 
+          data-category="{{item.id}}"
+        >{{item.name}}</view>
+      </view>
+    </scroll-view>
+    
+    <!-- 结果列表 -->
+    <view class="search-results">
+      <!-- 加载中 -->
+      <view class="loading-view" wx:if="{{isLoading}}">
+        <view class="loading-icon"></view>
+        <text class="loading-text">搜索中...</text>
+      </view>
+      
+      <!-- 空结果 -->
+      <view class="empty-view" wx:elif="{{isEmpty}}">
+        <image class="empty-icon" src="/assets/icons/empty.png"></image>
+        <text class="empty-text">没有找到相关内容</text>
+        <text class="empty-tips">换个搜索词试试吧~</text>
+      </view>
+      
+      <!-- 结果列表 -->
+      <block wx:else>
+        <view 
+          class="result-item" 
+          wx:for="{{searchResults}}" 
+          wx:key="id" 
+          bindtap="tapResultItem" 
+          data-item="{{item}}"
+        >
+          <image class="result-icon" src="{{item.icon}}"></image>
+          <view class="result-info">
+            <view class="result-title">{{item.title}}</view>
+            <view class="result-subtitle">{{item.subtitle}}</view>
+          </view>
+          <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+        </view>
+      </block>
+    </view>
+  </block>
+</view> 

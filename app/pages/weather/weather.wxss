@@ -1,0 +1,420 @@
+/* pages/weather/weather.wxss */
+
+.container {
+  padding-bottom: 40rpx;
+  background-color: #f5f5f5;
+}
+
+/* 位置选择栏样式 */
+.location-bar {
+  padding: 30rpx;
+  background-color: #e63946;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(230, 57, 70, 0.3);
+}
+
+.location-left {
+  display: flex;
+  align-items: center;
+}
+
+.location-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+
+.location-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-right: 10rpx;
+}
+
+.arrow-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.location-right {
+  width: 60rpx;
+  height: 60rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-icon {
+  width: 28rpx;
+  height: 28rpx;
+}
+
+/* 天气卡片样式 */
+.weather-card {
+  margin: 24rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 当前天气样式 */
+.current-weather {
+  padding: 40rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(120deg, #3498db, #2980b9);
+  color: white;
+}
+
+.weather-temp {
+  font-size: 120rpx;
+  font-weight: 200;
+  line-height: 1.1;
+  margin-bottom: 16rpx;
+}
+
+.weather-icon-large {
+  margin: 20rpx 0;
+}
+
+.weather-icon-large image {
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.weather-desc {
+  font-size: 40rpx;
+  margin-bottom: 24rpx;
+}
+
+.weather-details {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  margin-top: 20rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+}
+
+.detail-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 10rpx;
+}
+
+.update-time {
+  margin-top: 30rpx;
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 小时预报样式 */
+.hourly-forecast {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 24rpx;
+  color: #333;
+}
+
+.hourly-container {
+  display: flex;
+  white-space: nowrap;
+}
+
+.hourly-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 40rpx;
+  min-width: 120rpx;
+}
+
+.hourly-time {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.hourly-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin: 16rpx 0;
+}
+
+.hourly-temp {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 每日预报样式 */
+.daily-forecast {
+  padding: 30rpx;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.daily-item:last-child {
+  border-bottom: none;
+}
+
+.daily-day {
+  width: 160rpx;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.daily-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin: 0 40rpx;
+}
+
+.daily-temp {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.temp-min, .temp-max {
+  font-size: 28rpx;
+  width: 60rpx;
+  text-align: center;
+}
+
+.temp-min {
+  color: #5ac8fa;
+}
+
+.temp-max {
+  color: #ff9500;
+}
+
+.temp-bar-container {
+  flex: 1;
+  height: 8rpx;
+  background-color: #f0f0f0;
+  border-radius: 4rpx;
+  margin: 0 20rpx;
+  position: relative;
+}
+
+.temp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #5ac8fa, #ff9500);
+  border-radius: 4rpx;
+  position: absolute;
+  top: 0;
+}
+
+/* 天气预警样式 */
+.weather-alert {
+  margin: 24rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background-color: #fff8f5;
+  border-left: 8rpx solid #ff9500;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.alert-title {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ff9500;
+  margin-bottom: 16rpx;
+}
+
+.alert-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
+}
+
+.alert-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 空气质量卡片样式 */
+.air-quality-card {
+  margin: 24rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  background-color: white;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.air-quality-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.air-title {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.air-title-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
+}
+
+.air-quality-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
+  color: white;
+}
+
+.air-quality-value.excellent, .air-quality-value.good {
+  background-color: #4caf50;
+}
+
+.air-quality-value.moderate {
+  background-color: #ff9800;
+}
+
+.air-quality-value.unhealthy, .air-quality-value.very-unhealthy, .air-quality-value.hazardous {
+  background-color: #f44336;
+}
+
+.air-quality-number {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.air-quality-label {
+  font-size: 24rpx;
+  margin-top: 4rpx;
+}
+
+.air-pollutants {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30rpx 20rpx;
+}
+
+.pollutant-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 20rpx;
+  border-radius: 16rpx;
+}
+
+.pollutant-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.pollutant-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 生活指数卡片样式 */
+.life-indices-card {
+  margin: 24rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  background-color: white;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.indices-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30rpx 20rpx;
+  margin-top: 20rpx;
+}
+
+.index-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.index-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 12rpx;
+}
+
+.index-name {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  text-align: center;
+}
+
+.index-level {
+  font-size: 26rpx;
+  color: #e63946;
+  font-weight: bold;
+}
+
+/* 加载遮罩 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #f3f3f3;
+  border-top: 6rpx solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 30rpx;
+  font-size: 30rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

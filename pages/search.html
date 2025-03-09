@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 搜索</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            padding-bottom: 83px; /* 为底部导航腾出空间 */
+        }
+        
+        /* 搜索头部 */
+        .search-header {
+            background-color: #e63946;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .back-button {
+            color: white;
+            font-size: 24px;
+        }
+        
+        .search-container {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon {
+            color: white;
+            opacity: 0.8;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .clear-button {
+            color: white;
+            opacity: 0.7;
+            font-size: 16px;
+        }
+        
+        /* 搜索过滤器 */
+        .search-filters {
+            background-color: white;
+            padding: 12px 16px;
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-chip {
+            white-space: nowrap;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            border: 1px solid #e0e0e0;
+            color: #666;
+        }
+        
+        .filter-chip.active {
+            background-color: #e63946;
+            color: white;
+            border-color: #e63946;
+        }
+        
+        /* 搜索历史 */
+        .search-history {
+            background-color: white;
+            margin: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .section-action {
+            font-size: 14px;
+            color: #8e8e93;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-icon {
+            color: #8e8e93;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        
+        .history-text {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        /* 搜索结果 */
+        .search-results {
+            padding: 0 12px;
+        }
+        
+        .result-category {
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .category-header {
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-item {
+            display: flex;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #e63946;
+            font-size: 20px;
+        }
+        
+        .result-content {
+            flex: 1;
+        }
+        
+        .result-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .result-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #e63946;
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8e8e93;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .empty-desc {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 搜索头部 -->
+    <div class="search-header">
+        <a href="home.html" class="back-button"><i class="fas fa-chevron-left"></i></a>
+        <div class="search-container">
+            <div class="search-icon"><i class="fas fa-search"></i></div>
+            <input type="text" class="search-input" placeholder="搜索节气、节日、日期..." value="清明节">
+            <div class="clear-button"><i class="fas fa-times-circle"></i></div>
+        </div>
+    </div>
+    
+    <!-- 搜索过滤器 -->
+    <div class="search-filters">
+        <div class="filter-chip active">全部</div>
+        <div class="filter-chip">节气</div>
+        <div class="filter-chip">传统节日</div>
+        <div class="filter-chip">现代节日</div>
+        <div class="filter-chip">黄历宜忌</div>
+        <div class="filter-chip">日期转换</div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 搜索结果 -->
+        <div class="search-results">
+            <!-- 日期类结果 -->
+            <div class="result-category">
+                <div class="category-header">节气节日</div>
+                <div class="result-card">
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title"><span class="highlight">清明节</span> 2025年4月4日</div>
+                            <div class="result-desc">农历二月廿六，星期五，传统节日，扫墓祭祀先人，慎终追远</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title"><span class="highlight">清明</span>节气 2025年4月4日</div>
+                            <div class="result-desc">二十四节气之一，气温回升，雨量增多，万物生长</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title">2024年<span class="highlight">清明节</span> 4月4日</div>
+                            <div class="result-desc">农历二月廿六，星期四</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 黄历宜忌结果 -->
+            <div class="result-category">
+                <div class="category-header">黄历宜忌</div>
+                <div class="result-card">
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title"><span class="highlight">清明</span>节气黄历宜忌</div>
+                            <div class="result-desc">宜：祭祀、扫墓、远行、栽种 | 忌：婚嫁、动土、入宅</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title">2025年<span class="highlight">清明</span>节民俗活动</div>
+                            <div class="result-desc">踏青、放风筝、荡秋千、植树、吃青团</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 相关知识结果 -->
+            <div class="result-category">
+                <div class="category-header">相关知识</div>
+                <div class="result-card">
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title"><span class="highlight">清明</span>节的由来</div>
+                            <div class="result-desc"><span class="highlight">清明</span>节源于上古时代的祖先信仰与春祭礼俗，距今已有2500多年历史</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-title"><span class="highlight">清明</span>时节雨纷纷</div>
+                            <div class="result-desc"><span class="highlight">清明</span>时节天气特点与相关诗词文化</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 无搜索结果状态（默认隐藏） -->
+        <div class="empty-state" style="display: none;">
+            <div class="empty-icon"><i class="fas fa-search"></i></div>
+            <div class="empty-text">没有找到相关结果</div>
+            <div class="empty-desc">尝试使用不同的关键词或检查您的拼写</div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </a>
+        <a href="almanac.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </a>
+        <a href="weather.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </a>
+        <a href="settings.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </a>
+    </div>
+</body>
+</html> 

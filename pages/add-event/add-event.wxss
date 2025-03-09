@@ -1,0 +1,248 @@
+/* pages/add-event/add-event.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 120rpx;
+  background-color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 表单容器 */
+.form-container {
+  padding: 30rpx;
+}
+
+/* 表单组样式 */
+.form-group {
+  margin-bottom: 30rpx;
+  background-color: white;
+  position: relative;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+.form-content {
+  width: 100%;
+}
+
+/* 输入框样式 */
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  font-size: 28rpx;
+  color: #333;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding: 0 20rpx 0 0;
+  box-sizing: border-box;
+}
+
+.title-input {
+  height: 100rpx;
+  font-size: 36rpx;
+  font-weight: 500;
+  padding: 0;
+}
+
+.form-textarea {
+  width: 100%;
+  height: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  padding: 20rpx;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+}
+
+/* 选择器样式 */
+.picker-view {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80rpx;
+  font-size: 28rpx;
+  color: #333;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.picker-arrow {
+  width: 36rpx;
+  height: 36rpx;
+  opacity: 0.5;
+}
+
+.picker-arrow image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 时间选择器 */
+.time-pickers {
+  display: flex;
+  align-items: center;
+}
+
+.time-picker-view {
+  width: 120rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #333;
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+}
+
+.time-separator {
+  margin: 0 20rpx;
+  color: #666;
+  font-size: 28rpx;
+}
+
+/* 开关样式 */
+.switch-group .form-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+/* 农历信息样式 */
+.lunar-info {
+  background-color: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 30rpx;
+}
+
+.lunar-text {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+.suit-avoid-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  font-size: 24rpx;
+}
+
+.suit-text {
+  color: #e63946;
+}
+
+.avoid-text {
+  color: #2a9d8f;
+}
+
+/* 颜色选择器样式 */
+.color-selector {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 10rpx;
+}
+
+.color-option {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-option.selected {
+  border: 3rpx solid #fff;
+  box-shadow: 0 0 0 3rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 底部按钮样式 */
+.bottom-buttons {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background-color: white;
+  padding: 20rpx 30rpx calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #f0f0f0;
+  z-index: 10;
+}
+
+.action-button {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+  margin: 0 10rpx;
+  color: white;
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.submit-button {
+  background-color: #e63946;
+}
+
+/* 加载遮罩样式 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e63946;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

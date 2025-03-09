@@ -1,0 +1,196 @@
+<!--pages/day-detail/day-detail.wxml-->
+<view class="container">
+  <!-- 日期导航 -->
+  <view class="date-navigator">
+    <view class="date-arrow" bindtap="goPrevDay">
+      <image class="arrow-icon" src="/assets/icons/arrow-left.png"></image>
+    </view>
+    <view class="date-info">
+      <view class="date-text">{{date.year}}年{{date.month}}月{{date.day}}日</view>
+      <view class="weekday-text">{{date.weekday}}</view>
+    </view>
+    <view class="date-arrow" bindtap="goNextDay">
+      <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+    </view>
+    <view class="today-btn" bindtap="goToToday" wx:if="{{!date.isToday}}">今天</view>
+  </view>
+  
+  <!-- 农历信息 -->
+  <view class="lunar-card">
+    <view class="lunar-header">
+      <view class="lunar-title">
+        <text>农历 {{lunarInfo.lunarYear}}年</text>
+        <text class="zodiac">{{lunarInfo.zodiac}}年</text>
+      </view>
+      <view class="collect-btn {{isCollected ? 'collected' : ''}}" bindtap="toggleCollect">
+        <image class="collect-icon" src="{{isCollected ? '/assets/icons/star-filled.png' : '/assets/icons/star.png'}}"></image>
+      </view>
+    </view>
+    
+    <view class="lunar-main">
+      <view class="lunar-date">{{lunarInfo.lunarMonth}}{{lunarInfo.lunarDay}}</view>
+      <view class="festival" wx:if="{{lunarInfo.festival || lunarInfo.term}}">
+        <text wx:if="{{lunarInfo.festival}}">{{lunarInfo.festival}}</text>
+        <text wx:if="{{lunarInfo.festival && lunarInfo.term}}"> · </text>
+        <text wx:if="{{lunarInfo.term}}">{{lunarInfo.term}}</text>
+      </view>
+    </view>
+    
+    <view class="ganzhi-info">
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">年柱</text>
+        <text class="ganzhi-value">{{lunarInfo.yearGanZhi}}</text>
+      </view>
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">月柱</text>
+        <text class="ganzhi-value">{{lunarInfo.monthGanZhi}}</text>
+      </view>
+      <view class="ganzhi-item">
+        <text class="ganzhi-label">日柱</text>
+        <text class="ganzhi-value">{{lunarInfo.dayGanZhi}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 简要天气 -->
+  <view class="weather-card">
+    <view class="weather-icon">
+      <image src="{{weather.icon}}"></image>
+    </view>
+    <view class="weather-info">
+      <view class="weather-main">
+        <text class="weather-condition">{{weather.condition}}</text>
+        <text class="weather-temp">{{weather.temperature}}</text>
+      </view>
+      <view class="weather-details">
+        <text class="weather-wind">{{weather.windDirection}}{{weather.windPower}}</text>
+        <text class="weather-humidity">湿度 {{weather.humidity}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 宜忌信息 -->
+  <view class="almanac-card">
+    <view class="section-title">今日宜忌</view>
+    <view class="almanac-content">
+      <view class="almanac-row">
+        <view class="row-title good">宜</view>
+        <view class="row-content">
+          <text class="activity-tag" 
+                wx:for="{{almanacInfo.suit}}" 
+                wx:key="name" 
+                bindtap="showActivityDetail" 
+                data-type="suit" 
+                data-index="{{index}}">{{item.name}}</text>
+        </view>
+      </view>
+      <view class="almanac-row">
+        <view class="row-title bad">忌</view>
+        <view class="row-content">
+          <text class="activity-tag" 
+                wx:for="{{almanacInfo.avoid}}" 
+                wx:key="name" 
+                bindtap="showActivityDetail" 
+                data-type="avoid" 
+                data-index="{{index}}">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 方位信息 -->
+  <view class="direction-card">
+    <view class="section-title">方位信息</view>
+    <view class="direction-content">
+      <view class="direction-row">
+        <view class="row-label">胎神</view>
+        <view class="row-value">{{almanacInfo.fetusGod}}</view>
+      </view>
+      <view class="direction-row">
+        <view class="row-label">吉神</view>
+        <view class="row-value">
+          <text wx:for="{{almanacInfo.goodDirection}}" wx:key="name">
+            {{item.name}}:{{item.direction}}{{index < almanacInfo.goodDirection.length-1 ? '，' : ''}}
+          </text>
+        </view>
+      </view>
+      <view class="direction-row">
+        <view class="row-label">凶煞</view>
+        <view class="row-value">
+          <text wx:for="{{almanacInfo.badDirection}}" wx:key="name">
+            {{item.name}}:{{item.direction}}{{index < almanacInfo.badDirection.length-1 ? '，' : ''}}
+          </text>
+        </view>
+      </view>
+      <view class="direction-row">
+        <view class="row-label">冲煞</view>
+        <view class="row-value">
+          冲{{almanacInfo.clash.animal}}({{almanacInfo.clash.direction}}) {{almanacInfo.clash.yearGod}}
+        </view>
+      </view>
+      <view class="direction-row">
+        <view class="row-label">彭祖百忌</view>
+        <view class="row-value">
+          <text wx:for="{{almanacInfo.pengZu}}" wx:key="*this">
+            {{item}}{{index < almanacInfo.pengZu.length-1 ? '，' : ''}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 日程列表 -->
+  <view class="events-card">
+    <view class="events-header">
+      <view class="section-title">日程安排</view>
+      <view class="add-event-btn" bindtap="addEvent">+ 添加</view>
+    </view>
+    
+    <view class="events-list" wx:if="{{events.length > 0}}">
+      <view class="event-item" wx:for="{{events}}" wx:key="id">
+        <view class="event-left">
+          <view class="event-color-dot" style="background-color: {{item.color}}"></view>
+        </view>
+        <view class="event-main" bindtap="editEvent" data-id="{{item.id}}">
+          <view class="event-title">{{item.title}}</view>
+          <view class="event-time" wx:if="{{!item.isAllDay}}">{{item.startTime}} - {{item.endTime}}</view>
+          <view class="event-time" wx:else>全天</view>
+          <view class="event-location" wx:if="{{item.location}}">{{item.location}}</view>
+        </view>
+        <view class="event-right">
+          <view class="delete-btn" catchtap="deleteEvent" data-id="{{item.id}}">
+            <image class="delete-icon" src="/assets/icons/delete.png"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <view class="empty-events" wx:else>
+      <image class="empty-icon" src="/assets/icons/calendar-empty.png"></image>
+      <view class="empty-text">今日暂无日程安排</view>
+      <view class="empty-add-btn" bindtap="addEvent">添加日程</view>
+    </view>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button class="action-btn" open-type="share">
+      <image class="action-icon" src="/assets/icons/share.png"></image>
+      <text>分享</text>
+    </button>
+    <button class="action-btn" bindtap="addEvent">
+      <image class="action-icon" src="/assets/icons/add.png"></image>
+      <text>添加日程</text>
+    </button>
+    <button class="action-btn" bindtap="toggleCollect">
+      <image class="action-icon" src="{{isCollected ? '/assets/icons/star-filled.png' : '/assets/icons/star.png'}}"></image>
+      <text>{{isCollected ? '取消收藏' : '收藏'}}</text>
+    </button>
+  </view>
+  
+  <!-- 加载遮罩 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

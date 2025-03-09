@@ -1,0 +1,71 @@
+<!-- 设置页面 -->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
+    <view class="user-info">
+      <text class="user-nickname">{{userInfo.nickName}}</text>
+      <view class="user-vip" wx:if="{{vipInfo.isVip}}">
+        <view class="vip-badge">VIP</view>
+        <text class="vip-text">{{vipInfo.expireDate}}到期</text>
+      </view>
+    </view>
+    
+    <view class="login-btn" bindtap="navigateToLogin" wx:if="{{!userInfo.isLogin}}">
+      <text>登录/注册</text>
+    </view>
+  </view>
+  
+  <!-- 设置列表 -->
+  <view class="settings-container">
+    <block wx:for="{{settingsList}}" wx:key="id" wx:for-item="section">
+      <view class="settings-section">
+        <view class="section-title">{{section.title}}</view>
+        
+        <view class="settings-list">
+          <view 
+            class="setting-item" 
+            wx:for="{{section.items}}" 
+            wx:key="id" 
+            wx:if="{{!item.hidden}}"
+            bindtap="onItemTap"
+            data-id="{{item.id}}"
+            data-item="{{item}}"
+          >
+            <view class="item-left">
+              <text class="item-icon iconfont icon-{{item.icon}}"></text>
+              <text class="item-title">{{item.title}}</text>
+            </view>
+            
+            <view class="item-right">
+              <!-- 标签显示 -->
+              <text class="item-tag" wx:if="{{item.tag}}">{{item.tag}}</text>
+              
+              <!-- 内容显示 -->
+              <text class="item-value" wx:if="{{item.value && !item.switch}}">{{item.value}}</text>
+              
+              <!-- 开关 -->
+              <switch 
+                wx:if="{{item.switch}}" 
+                checked="{{item.value}}" 
+                color="#e63946" 
+                bindchange="toggleSwitch" 
+                data-id="{{item.id}}" 
+                catch:tap="return"
+              ></switch>
+              
+              <!-- 箭头 -->
+              <text class="item-arrow iconfont icon-arrow-right" wx:if="{{item.arrow}}"></text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 版本信息 -->
+  <view class="app-version">
+    <text class="version-text">中华万年历 v1.0.0</text>
+    <text class="copyright">© 2023 万年历团队</text>
+  </view>
+</view> 

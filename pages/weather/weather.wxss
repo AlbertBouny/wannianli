@@ -1,0 +1,502 @@
+/* pages/weather/weather.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 30rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 城市选择区域样式 */
+.city-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #e63946;
+  color: white;
+}
+
+.city-selector {
+  display: flex;
+  align-items: center;
+}
+
+.city-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-right: 8rpx;
+}
+
+.city-arrow-icon {
+  font-size: 24rpx;
+  transform: rotate(0deg);
+  transition: transform 0.3s;
+}
+
+.refresh-btn {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.refresh-icon {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 实时天气区域样式 */
+.current-weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  background-color: #e63946;
+  color: white;
+  position: relative;
+  border-radius: 0 0 30rpx 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.temperature-value {
+  font-size: 120rpx;
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+.condition-text {
+  font-size: 40rpx;
+  margin-top: -10rpx;
+  margin-bottom: 20rpx;
+}
+
+.condition-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.weather-details {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin-top: 20rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.3);
+  padding-top: 20rpx;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-bottom: 6rpx;
+}
+
+.detail-value {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.update-time {
+  font-size: 22rpx;
+  opacity: 0.6;
+  margin-top: 30rpx;
+  align-self: flex-end;
+}
+
+/* 天气预警区域样式 */
+.weather-alerts {
+  margin: 0 20rpx 20rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.alert-icon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  margin-right: 20rpx;
+  font-size: 24rpx;
+}
+
+.alert-level-yellow {
+  background-color: #ffcc00;
+}
+
+.alert-level-orange {
+  background-color: #ff6600;
+}
+
+.alert-level-red {
+  background-color: #cc0000;
+}
+
+.alert-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-type {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.alert-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.alert-arrow {
+  width: 30rpx;
+  height: 30rpx;
+  opacity: 0.5;
+}
+
+.arrow-icon {
+  width: 100%;
+  height: 100%;
+}
+
+/* 空气质量区域样式 */
+.air-quality {
+  margin: 0 20rpx 20rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-left: 20rpx;
+  border-left: 8rpx solid #e63946;
+  line-height: 1.2;
+}
+
+.aqi-container {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.aqi-value {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.aqi-level {
+  font-size: 30rpx;
+  color: #666;
+}
+
+.aqi-level-good {
+  color: #8cc152;
+}
+
+.aqi-level-moderate {
+  color: #f0ad4e;
+}
+
+.aqi-level-unhealthy {
+  color: #e63946;
+}
+
+.aqi-level-hazardous {
+  color: #7f3b08;
+}
+
+.aqi-details {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.aqi-item {
+  width: 33.33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+}
+
+.aqi-item-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.aqi-item-value {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 天气预报区域样式 */
+.weather-forecast {
+  margin: 0 20rpx 20rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.forecast-tabs {
+  display: flex;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.forecast-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.forecast-tab.active {
+  color: #e63946;
+  font-weight: 500;
+}
+
+.forecast-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 6rpx;
+  background-color: #e63946;
+  border-radius: 3rpx;
+}
+
+/* 每小时预报样式 */
+.hourly-forecast {
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding: 20rpx 0;
+}
+
+.hourly-forecast::-webkit-scrollbar {
+  display: none;
+}
+
+.hourly-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 130rpx;
+}
+
+.hourly-time {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.hourly-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 16rpx;
+}
+
+.hourly-temp {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 每日预报样式 */
+.daily-forecast {
+  padding: 10rpx 0;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.daily-item:last-child {
+  border-bottom: none;
+}
+
+.daily-date {
+  width: 140rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.daily-day {
+  font-weight: 500;
+}
+
+.daily-date-num {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.daily-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin: 0 30rpx;
+}
+
+.daily-condition {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.daily-temp {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.daily-temp-low {
+  color: #67b7dc;
+  margin-right: 20rpx;
+}
+
+.daily-temp-high {
+  color: #e63946;
+}
+
+/* 生活指数区域样式 */
+.life-indices {
+  margin: 0 20rpx 20rpx;
+  background-color: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.indices-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.index-item {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+}
+
+.index-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.index-name {
+  font-size: 26rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.index-level {
+  font-size: 24rpx;
+  color: #666;
+  padding: 4rpx 16rpx;
+  background-color: #f8f8f8;
+  border-radius: 20rpx;
+}
+
+/* 底部信息区域样式 */
+.bottom-info {
+  margin: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 加载遮罩样式 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e63946;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

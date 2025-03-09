@@ -1,0 +1,250 @@
+<!-- 添加日程页面 -->
+<view class="container">
+  <!-- 导航按钮 -->
+  <view class="nav-buttons">
+    <view class="cancel-btn" bindtap="cancelEdit">取消</view>
+    <view class="save-btn" bindtap="saveEvent">保存</view>
+  </view>
+  
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 基本信息 -->
+    <view class="form-group">
+      <view class="form-item">
+        <input 
+          class="title-input" 
+          placeholder="日程标题" 
+          value="{{title}}" 
+          bindinput="onTitleInput"
+          focus
+        />
+      </view>
+      
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-location"></text>
+        </view>
+        <input 
+          class="input" 
+          placeholder="地点" 
+          value="{{location}}" 
+          bindinput="onLocationInput"
+        />
+      </view>
+    </view>
+    
+    <!-- 日期时间设置 -->
+    <view class="form-group">
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-calendar"></text>
+        </view>
+        <view class="item-label">日期</view>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-value">{{date}}</view>
+        </picker>
+        <view class="item-arrow">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-time"></text>
+        </view>
+        <view class="item-label">全天</view>
+        <switch 
+          class="switch-item" 
+          checked="{{isAllDay}}" 
+          color="#e63946" 
+          bindchange="onAllDayChange"
+        />
+      </view>
+      
+      <block wx:if="{{!isAllDay}}">
+        <view class="form-item">
+          <view class="item-icon"></view>
+          <view class="item-label">开始时间</view>
+          <picker mode="time" value="{{startTime}}" bindchange="onStartTimeChange">
+            <view class="picker-value">{{startTime}}</view>
+          </picker>
+          <view class="item-arrow">
+            <text class="iconfont icon-arrow-right"></text>
+          </view>
+        </view>
+        
+        <view class="form-item">
+          <view class="item-icon"></view>
+          <view class="item-label">结束时间</view>
+          <picker mode="time" value="{{endTime}}" bindchange="onEndTimeChange">
+            <view class="picker-value">{{endTime}}</view>
+          </picker>
+          <view class="item-arrow">
+            <text class="iconfont icon-arrow-right"></text>
+          </view>
+        </view>
+      </block>
+      
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-repeat"></text>
+        </view>
+        <view class="item-label">重复</view>
+        <picker 
+          mode="selector" 
+          range="{{repeatOptions}}" 
+          range-key="name" 
+          value="{{repeatIndex}}" 
+          bindchange="onRepeatChange"
+        >
+          <view class="picker-value">{{repeatOptions[repeatIndex].name}}</view>
+        </picker>
+        <view class="item-arrow">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-alert"></text>
+        </view>
+        <view class="item-label">提醒</view>
+        <picker 
+          mode="selector" 
+          range="{{reminderOptions}}" 
+          range-key="name" 
+          value="{{reminderIndex}}" 
+          bindchange="onReminderChange"
+        >
+          <view class="picker-value">{{reminderOptions[reminderIndex].name}}</view>
+        </picker>
+        <view class="item-arrow">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 颜色分类设置 -->
+    <view class="form-group">
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-category"></text>
+        </view>
+        <view class="item-label">分类</view>
+        <picker 
+          mode="selector" 
+          range="{{categoryOptions}}" 
+          range-key="name" 
+          value="{{categoryIndex}}" 
+          bindchange="onCategoryChange"
+        >
+          <view class="picker-value">{{categoryOptions[categoryIndex].name}}</view>
+        </picker>
+        <view class="item-arrow">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <view class="item-icon">
+          <text class="iconfont icon-color"></text>
+        </view>
+        <view class="item-label">颜色</view>
+        <picker 
+          mode="selector" 
+          range="{{colorList}}" 
+          range-key="name" 
+          value="{{colorIndex}}" 
+          bindchange="onColorChange"
+        >
+          <view class="color-preview" style="background-color: {{colorList[colorIndex].value}}"></view>
+          <view class="picker-value">{{colorList[colorIndex].name}}</view>
+        </picker>
+        <view class="item-arrow">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 标签 -->
+    <view class="form-group">
+      <view class="form-header">
+        <text class="form-title">标签</text>
+      </view>
+      
+      <view class="tags-container">
+        <view 
+          class="tag-item" 
+          wx:for="{{tags}}" 
+          wx:key="*this"
+        >
+          <text class="tag-text">{{item}}</text>
+          <text class="tag-delete" bindtap="removeTag" data-index="{{index}}">×</text>
+        </view>
+        
+        <view class="tag-input-container">
+          <input 
+            class="tag-input" 
+            placeholder="添加标签" 
+            value="{{tagInput}}" 
+            confirm-type="done"
+            bindinput="onTagInput"
+            bindconfirm="addTag"
+          />
+          <view class="tag-add-btn" bindtap="addTag">＋</view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 农历信息 -->
+    <view class="form-group">
+      <view class="form-header" bindtap="toggleLunarInfo">
+        <text class="form-title">农历信息</text>
+        <text class="form-subtitle">{{lunarInfo.lunar}}</text>
+        <view class="toggle-icon {{showLunarInfo ? 'open' : ''}}">
+          <text class="iconfont icon-arrow-down"></text>
+        </view>
+      </view>
+      
+      <view class="lunar-info" wx:if="{{showLunarInfo}}">
+        <view class="lunar-date">公历：{{lunarDate}}</view>
+        
+        <view class="lunar-suitable">
+          <view class="lunar-subtitle">宜</view>
+          <view class="lunar-tags">
+            <text class="lunar-tag" wx:for="{{lunarInfo.suitable}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+        
+        <view class="lunar-avoid">
+          <view class="lunar-subtitle">忌</view>
+          <view class="lunar-tags">
+            <text class="lunar-tag avoid" wx:for="{{lunarInfo.avoid}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 备注 -->
+    <view class="form-group">
+      <view class="form-header">
+        <text class="form-title">备注</text>
+      </view>
+      
+      <view class="notes-container">
+        <textarea 
+          class="notes-input" 
+          placeholder="添加备注..." 
+          value="{{notes}}" 
+          bindinput="onNotesInput"
+          maxlength="200"
+        />
+      </view>
+    </view>
+  </view>
+  
+  <!-- 删除按钮 (仅编辑模式显示) -->
+  <view class="delete-container" wx:if="{{isEdit}}">
+    <view class="delete-btn" bindtap="deleteEvent">删除日程</view>
+  </view>
+</view> 

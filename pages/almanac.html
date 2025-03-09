@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 黄历详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            padding-bottom: 83px; /* 为底部导航腾出空间 */
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+        
+        /* 黄历页面特定样式 */
+        .header-bar {
+            background-color: #e63946;
+            color: white;
+            padding: 12px 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+        
+        .nav-tab {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 15px;
+            padding: 5px 0;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 3px;
+        }
+        
+        .share-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .date-selector {
+            background-color: white;
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .date-text {
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .date-text i {
+            margin-left: 6px;
+            color: #999;
+        }
+        
+        .lunar-date-display {
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+        
+        .arrow-icon {
+            color: #e63946;
+            font-size: 22px;
+            margin: 0 15px;
+            opacity: 0.5;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(230, 57, 70, 0.05);
+        }
+        
+        .lunar-date {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e63946;
+        }
+        
+        .date-details {
+            text-align: center;
+            padding: 5px 15px 15px;
+            font-size: 14px;
+            color: #666;
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 12px;
+        }
+        
+        .almanac-card {
+            background-color: white;
+            margin: 0 12px 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .almanac-yi-ji {
+            padding: 16px;
+            background-color: white;
+            border-radius: 10px;
+            margin: 0 12px 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .yi-ji-content {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .yi-tag, .ji-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            margin-right: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .yi-tag {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+        
+        .ji-tag {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        
+        .yi-label, .ji-label {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .yi-label {
+            background-color: #4caf50;
+        }
+        
+        .ji-label {
+            background-color: #f44336;
+        }
+        
+        .almanac-info {
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .almanac-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #967b4e;
+            position: relative;
+        }
+        
+        .almanac-title::before,
+        .almanac-title::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: #e8d9b5;
+        }
+        
+        .almanac-title::before {
+            left: 0;
+        }
+        
+        .almanac-title::after {
+            right: 0;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .info-item {
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .info-item-label {
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .info-item-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .bagua-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 16px 0;
+            position: relative;
+        }
+        
+        .bagua-image {
+            width: 100px;
+            height: 100px;
+            background-color: #fff3e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.15);
+        }
+        
+        .bagua-inner {
+            width: 70%;
+            height: 70%;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #e63946;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .bagua-image::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 2px solid #e63946;
+        }
+        
+        .gods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-bottom: 16px;
+        }
+        
+        .god-item {
+            border: 1px solid #f0f0f0;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        
+        .god-name {
+            color: #967b4e;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        
+        .god-position {
+            color: #333;
+        }
+        
+        .taboo-section {
+            background-color: white;
+            padding: 16px;
+            margin: 0 12px 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .taboo-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e63946;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .taboo-content {
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .zodiac-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        
+        .zodiac-item {
+            text-align: center;
+            margin: 5px;
+            width: calc(100% / 12 - 10px);
+        }
+        
+        .zodiac-name {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .auspicious {
+            color: #4caf50;
+            font-weight: 500;
+        }
+        
+        .inauspicious {
+            color: #f44336;
+            font-weight: 500;
+        }
+        
+        .neutral {
+            color: #ff9800;
+            font-weight: 500;
+        }
+        
+        .show-more {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            color: #967b4e;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: white;
+            margin: 0 12px 12px;
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .show-more i {
+            margin-left: 5px;
+        }
+        
+        .recommendations {
+            padding: 16px;
+            background-color: white;
+            margin: 0 12px 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .see-more {
+            font-size: 14px;
+            font-weight: normal;
+            color: #999;
+        }
+        
+        .see-more i {
+            margin-left: 2px;
+        }
+        
+        .button-row {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0 5px;
+        }
+        
+        .button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .button.active {
+            background-color: #fff3e0;
+            color: #e63946;
+            border-color: #ffcc80;
+            font-weight: 500;
+        }
+        
+        .recommendation-card {
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recommendation-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        .recommendation-details {
+            padding: 12px;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .recommendation-source {
+            font-weight: 500;
+        }
+        
+        .recommendation-stats {
+            color: #666;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 头部标题栏 -->
+        <div class="header-bar">
+            <div class="nav-tabs">
+                <div class="nav-tab active">黄历</div>
+                <div class="nav-tab">好运</div>
+            </div>
+            <div class="share-icon">
+                <i class="fas fa-share-square"></i>
+            </div>
+        </div>
+        
+        <!-- 日期选择器 -->
+        <div class="date-selector">
+            <div class="date-text">
+                2025年03月09日 <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        
+        <!-- 农历日期显示 -->
+        <div class="lunar-date-display">
+            <div class="arrow-icon">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="lunar-date">二月初十</div>
+            <div class="arrow-icon">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <!-- 日期详细信息 -->
+        <div class="date-details">
+            乙巳年 己卯月 丁丑日[属蛇] 周日 第11周
+        </div>
+        
+        <!-- 宜忌信息 -->
+        <div class="almanac-yi-ji">
+            <div class="yi-ji-content">
+                <div><span class="yi-label">宜</span></div>
+                <div style="flex: 1">
+                    <span class="yi-tag">祭祀</span>
+                    <span class="yi-tag">订盟</span>
+                    <span class="yi-tag">纳采</span>
+                    <span class="yi-tag">修造</span>
+                    <span class="yi-tag">动土</span>
+                    <span class="yi-tag">祈福</span>
+                    <span class="yi-tag">塑绘</span>
+                    <span class="yi-tag">斋醮</span>
+                    <span class="yi-tag">沐浴</span>
+                    <span class="yi-tag">拆卸</span>
+                    <span class="yi-tag">起基</span>
+                    <span class="yi-tag">入宅</span>
+                    <span class="yi-tag" style="background-color: #e8f5e9; padding: 5px 10px; border-radius: 5px;">安香</span>
+                    <span class="yi-tag">造庙</span>
+                    <span class="yi-tag">移柩</span>
+                    <span class="yi-tag">谢土</span>
+                    <span class="yi-tag">除服</span>
+                    <span class="yi-tag">成服</span>
+                    <span class="yi-tag">入学</span>
+                    <span class="yi-tag">习艺</span>
+                    <span class="yi-tag">出行</span>
+                    <span class="yi-tag">坐堂</span>
+                    <span class="yi-tag">掘井</span>
+                </div>
+            </div>
+            
+            <div class="yi-ji-content" style="margin-top: 15px;">
+                <div><span class="ji-label">忌</span></div>
+                <div style="flex: 1">
+                    <span class="ji-tag">作灶</span>
+                    <span class="ji-tag">安葬</span>
+                    <span class="ji-tag">开市</span>
+                    <span class="ji-tag">盖屋</span>
+                </div>
+            </div>
+            
+            <div class="button-row">
+                <div class="button active">日程</div>
+                <div class="button">问问</div>
+            </div>
+        </div>
+        
+        <!-- 黄历详情信息 -->
+        <div class="almanac-card">
+            <div class="almanac-info">
+                <div class="almanac-title">黄帝纪元四千七百七百二十二年</div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-item-label">五行</div>
+                        <div class="info-item-value">洞下水</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">值神</div>
+                        <div class="info-item-value">勾陈</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">冲煞</div>
+                        <div class="info-item-value">冲羊 煞东</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">星宿</div>
+                        <div class="info-item-value">房日兔</div>
+                    </div>
+                </div>
+                
+                <!-- 八卦与神位 -->
+                <div class="gods-grid">
+                    <div class="god-item">
+                        <div class="god-name">财神</div>
+                        <div class="god-position">正西</div>
+                    </div>
+                    <div class="bagua-container" style="grid-column: span 1;">
+                        <div class="bagua-image">
+                            <div class="bagua-inner">卦</div>
+                        </div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">福神</div>
+                        <div class="god-position">东南</div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">喜神</div>
+                        <div class="god-position">正南</div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">今日胎神</div>
+                        <div class="god-position">仓库厕外西南</div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">阳贵</div>
+                        <div class="god-position">西北</div>
+                    </div>
+                </div>
+                
+                <div class="gods-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="god-item">
+                        <div class="god-name">建除十二神</div>
+                        <div class="god-position">开日</div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">彭祖百忌</div>
+                        <div class="god-position" style="color: #f44336;">
+                            丁不剃头<br>
+                            丑不冲南<br>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gods-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="god-item">
+                        <div class="god-name">吉神宜趋</div>
+                        <div class="god-position">
+                            月恩 四相<br>
+                            阴德 天德合
+                        </div>
+                    </div>
+                    <div class="god-item">
+                        <div class="god-name">凶神宜忌</div>
+                        <div class="god-position" style="color: #f44336;">
+                            五虚 八风<br>
+                            九空 九焦
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="zodiac-row">
+                    <div class="info-item">
+                        <div class="info-item-label">时辰</div>
+                        <div class="info-item-value">宜忌</div>
+                    </div>
+                </div>
+                
+                <div class="zodiac-row">
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">子</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">丑</div>
+                        <div class="inauspicious">凶</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">寅</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">卯</div>
+                        <div class="neutral">平</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">辰</div>
+                        <div class="inauspicious">凶</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">巳</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                </div>
+                
+                <div class="zodiac-row">
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">午</div>
+                        <div class="inauspicious">凶</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">未</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">申</div>
+                        <div class="neutral">平</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">酉</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">戌</div>
+                        <div class="inauspicious">凶</div>
+                    </div>
+                    <div class="zodiac-item">
+                        <div class="zodiac-name">亥</div>
+                        <div class="auspicious">吉</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 查看更多按钮 -->
+        <div class="show-more">
+            收起更多 <i class="fas fa-chevron-up"></i>
+        </div>
+        
+        <!-- 推荐内容 -->
+        <div class="recommendations">
+            <div class="recommendation-title">
+                为你推荐
+                <span class="see-more">更多 <i class="fas fa-chevron-right"></i></span>
+            </div>
+            
+            <div class="recommendation-card">
+                <img class="recommendation-image" src="https://via.placeholder.com/350x150?text=立冬来啦!过冬如修行，记得添衣暖~" alt="推荐内容">
+                <div class="recommendation-details">
+                    <div class="recommendation-source">节庆研究所</div>
+                    <div class="recommendation-stats">2742人赞过</div>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <img class="recommendation-image" src="https://via.placeholder.com/350x150?text=立春迎春收春饼，顺应节气忌优郁" alt="推荐内容">
+                <div class="recommendation-details">
+                    <div class="recommendation-source">传统节气研究</div>
+                    <div class="recommendation-stats">1685人赞过</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </a>
+        <a href="almanac.html" class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </a>
+        <a href="weather.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </a>
+        <a href="settings.html" class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </a>
+    </div>
+</body>
+</html> 

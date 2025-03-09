@@ -1,0 +1,303 @@
+/* 搜索页面样式 */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+/* 搜索头部 */
+.search-header {
+  background-color: #e63946;
+  padding: 24rpx 30rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  position: relative;
+  z-index: 10;
+}
+
+.back-button {
+  color: #fff;
+  font-size: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-container {
+  flex: 1;
+  height: 72rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 36rpx;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 16rpx;
+  font-size: 36rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  color: #fff;
+  font-size: 30rpx;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.clear-button, .voice-button {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 36rpx;
+  padding: 0 10rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 过滤器 */
+.search-filters {
+  padding: 24rpx 20rpx;
+  background-color: #fff;
+  white-space: nowrap;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 9;
+}
+
+.filter-chip {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  margin-right: 20rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  background-color: #f5f5f5;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.filter-chip.active {
+  background-color: #e63946;
+  color: #fff;
+}
+
+/* 内容区域 */
+.content-area {
+  flex: 1;
+  padding: 20rpx 0;
+  box-sizing: border-box;
+}
+
+/* 搜索历史 */
+.search-history {
+  margin: 0 30rpx 30rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.section-action {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-icon {
+  color: #999;
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.history-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 搜索结果 */
+.search-results {
+  padding: 0 30rpx;
+}
+
+.result-category {
+  margin-bottom: 30rpx;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 16rpx;
+  padding: 0 10rpx;
+}
+
+.category-icon {
+  font-size: 32rpx;
+  margin-right: 10rpx;
+}
+
+.result-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.result-item {
+  display: flex;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  background-color: rgba(230, 57, 70, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.result-icon .iconfont {
+  color: #e63946;
+  font-size: 44rpx;
+}
+
+.result-content {
+  flex: 1;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.result-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 无结果提示 */
+.no-result {
+  padding: 60rpx 30rpx;
+  text-align: center;
+}
+
+.no-result-icon {
+  margin-bottom: 20rpx;
+}
+
+.no-result-icon .iconfont {
+  font-size: 100rpx;
+  color: #ccc;
+}
+
+.no-result-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.no-result-sub-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+/* 推荐项 */
+.recommendation-list {
+  padding: 0 20rpx;
+}
+
+.recommendation-item {
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx 30rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.recommend-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  background-color: rgba(230, 57, 70, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.recommend-icon .iconfont {
+  color: #e63946;
+  font-size: 44rpx;
+}
+
+.recommend-content {
+  flex: 1;
+}
+
+.recommend-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.recommend-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 高亮文本 */
+.highlight {
+  color: #e63946;
+  font-weight: 500;
+} 

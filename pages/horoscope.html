@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 星座运势</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+        
+        /* 星座页面特定样式 */
+        .horoscope-header {
+            background-color: #e63946;
+            padding: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .zodiac-selector {
+            background-color: white;
+            padding: 16px;
+            margin: 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .selector-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .zodiac-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .zodiac-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .zodiac-active {
+            background-color: #fff1f1;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .zodiac-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            color: #e63946;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .zodiac-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .fortune-card {
+            background-color: white;
+            margin: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fortune-header {
+            background: linear-gradient(120deg, #e63946, #e85d69);
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .fortune-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 30px;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .fortune-title {
+            flex: 1;
+        }
+        
+        .fortune-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .fortune-date {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .fortune-content {
+            padding: 16px;
+        }
+        
+        .fortune-summary {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .fortune-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .fortune-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fortune-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .fortune-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .fortune-stars {
+            display: flex;
+            color: #e63946;
+        }
+        
+        .fortune-section {
+            margin-top: 16px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 16px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+            color: #e63946;
+        }
+        
+        .section-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .compatible-signs {
+            display: flex;
+            margin-top: 12px;
+            gap: 12px;
+        }
+        
+        .compatible-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            width: 70px;
+        }
+        
+        .compatible-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+            color: #e63946;
+        }
+        
+        .compatible-name {
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .fortune-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .timeline-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .timeline-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e63946;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 星座头部 -->
+        <div class="horoscope-header">星座运势</div>
+        
+        <!-- 星座选择器 -->
+        <div class="zodiac-selector">
+            <div class="selector-title">选择星座</div>
+            <div class="zodiac-grid">
+                <div class="zodiac-item zodiac-active">
+                    <div class="zodiac-icon"><i class="fas fa-ram"></i></div>
+                    <div class="zodiac-name">白羊座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-bull"></i></div>
+                    <div class="zodiac-name">金牛座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-user-friends"></i></div>
+                    <div class="zodiac-name">双子座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-crab"></i></div>
+                    <div class="zodiac-name">巨蟹座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-cat"></i></div>
+                    <div class="zodiac-name">狮子座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-female"></i></div>
+                    <div class="zodiac-name">处女座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-balance-scale"></i></div>
+                    <div class="zodiac-name">天秤座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-spider"></i></div>
+                    <div class="zodiac-name">天蝎座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-bow-arrow"></i></div>
+                    <div class="zodiac-name">射手座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-mountain"></i></div>
+                    <div class="zodiac-name">摩羯座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-tint"></i></div>
+                    <div class="zodiac-name">水瓶座</div>
+                </div>
+                <div class="zodiac-item">
+                    <div class="zodiac-icon"><i class="fas fa-fish"></i></div>
+                    <div class="zodiac-name">双鱼座</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 今日运势卡片 -->
+        <div class="fortune-card">
+            <div class="fortune-header">
+                <div class="fortune-icon">
+                    <i class="fas fa-ram"></i>
+                </div>
+                <div class="fortune-title">
+                    <div class="fortune-name">白羊座</div>
+                    <div class="fortune-date">2023年3月9日 星期四</div>
+                </div>
+            </div>
+            
+            <div class="fortune-content">
+                <div class="fortune-summary">
+                    今天白羊座的整体运势不错，尤其在工作和学习方面会有不错的表现，但感情方面需要更多耐心和沟通。
+                </div>
+                
+                <div class="fortune-details">
+                    <div class="fortune-item">
+                        <div class="fortune-label">整体运势</div>
+                        <div class="fortune-value">
+                            <div class="fortune-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-label">爱情运势</div>
+                        <div class="fortune-value">
+                            <div class="fortune-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-label">事业学业</div>
+                        <div class="fortune-value">
+                            <div class="fortune-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fortune-item">
+                        <div class="fortune-label">财富运势</div>
+                        <div class="fortune-value">
+                            <div class="fortune-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-heart"></i>
+                        <span>爱情运势</span>
+                    </div>
+                    <div class="section-content">
+                        单身的白羊座今天可能会遇到一些有趣的人，但不要操之过急。有伴侣的白羊座要注意沟通方式，避免因为直接而导致的误解和冲突。
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-briefcase"></i>
+                        <span>事业学业</span>
+                    </div>
+                    <div class="section-content">
+                        今天在工作或学习上会有突破性进展，灵感迸发，能够轻松解决之前困扰你的问题。适合开始新项目或重要的学习内容。
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-coins"></i>
+                        <span>财富运势</span>
+                    </div>
+                    <div class="section-content">
+                        财务状况稳定，可能会有意外收入。不过还是建议理性消费，不要因为一时冲动而进行大额支出，可以考虑一些小型投资。
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>健康运势</span>
+                    </div>
+                    <div class="section-content">
+                        整体健康状况良好，但要注意不要过度劳累。今天适合进行有氧运动，保持身体活力。注意饮食均衡，多补充水分。
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-users"></i>
+                        <span>相配星座</span>
+                    </div>
+                    <div class="compatible-signs">
+                        <div class="compatible-item">
+                            <div class="compatible-icon"><i class="fas fa-balance-scale"></i></div>
+                            <div class="compatible-name">天秤座</div>
+                        </div>
+                        <div class="compatible-item">
+                            <div class="compatible-icon"><i class="fas fa-cat"></i></div>
+                            <div class="compatible-name">狮子座</div>
+                        </div>
+                        <div class="compatible-item">
+                            <div class="compatible-icon"><i class="fas fa-bow-arrow"></i></div>
+                            <div class="compatible-name">射手座</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fortune-section">
+                    <div class="section-title">
+                        <i class="fas fa-magic"></i>
+                        <span>今日提示</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="fortune-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-label">幸运色</div>
+                                <div class="timeline-value">红色</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-label">幸运数字</div>
+                                <div class="timeline-value">3</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-label">贵人星座</div>
+                                <div class="timeline-value">射手座</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-label">幸运方位</div>
+                                <div class="timeline-value">东南</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </div>
+        <div class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-star"></i></div>
+            <div class="tab-text">星座</div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "黄历",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#e63946",
+  "backgroundTextStyle": "light",
+  "navigationBarBackgroundColor": "#e63946",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {}
+} 

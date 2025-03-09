@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中华万年历 - 日历主页</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* 顶部状态栏样式 */
+        .status-bar {
+            height: 44px;
+            background-color: #111;
+            color: white;
+            padding: 12px 16px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-bar-left {
+            display: flex;
+        }
+        
+        .status-bar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .status-bar-right {
+            display: flex;
+            gap: 6px;
+        }
+        
+        /* 内容区域样式 */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        
+        /* 底部导航栏样式 */
+        .tab-bar {
+            height: 83px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 20px; /* 适应 Home Indicator */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: #8e8e93;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        
+        .tab-active .tab-icon,
+        .tab-active .tab-text {
+            color: #e63946;
+        }
+        
+        /* 主页特定样式 */
+        .header-card {
+            background-color: #e63946;
+            color: white;
+            padding: 12px 16px 16px;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.3);
+        }
+        
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .month-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .month-text {
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .month-text i {
+            margin-left: 8px;
+            font-size: 16px;
+        }
+        
+        .add-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        /* 日历网格样式 */
+        .calendar-container {
+            padding: 0;
+            background-color: white;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background-color: white;
+            border-collapse: collapse;
+        }
+        
+        .weekday-header {
+            text-align: center;
+            padding: 10px 0;
+            font-weight: 600;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .weekend-header {
+            color: #e63946;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .calendar-day.inactive {
+            color: #cccccc;
+        }
+        
+        .calendar-day.weekend .day-number {
+            color: #e63946;
+        }
+        
+        .day-number {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .lunar-day {
+            font-size: 11px;
+            color: #888;
+        }
+        
+        .holiday-tag {
+            font-size: 11px;
+            color: #e63946;
+            margin-top: 2px;
+        }
+        
+        .current-day {
+            position: relative;
+        }
+        
+        .current-day .day-number {
+            color: #e63946;
+            font-weight: bold;
+        }
+        
+        .current-day::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #e63946;
+            box-sizing: border-box;
+        }
+        
+        /* 今日详情部分 */
+        .today-detail {
+            padding: 16px;
+            background-color: white;
+            margin: 0 12px 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #e63946;
+        }
+        
+        .today-header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            border-left: 4px solid #e63946;
+            padding-left: 10px;
+        }
+        
+        .today-subheader {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            width: 100px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 功能卡片区 */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 12px 12px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .feature-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-title i {
+            margin-right: 8px;
+            color: #e63946;
+        }
+        
+        .feature-content {
+            flex: 1;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .feature-content div {
+            margin-bottom: 5px;
+        }
+        
+        .feature-link {
+            text-align: right;
+            margin-top: 8px;
+        }
+        
+        .feature-link a {
+            color: #e63946;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">15:16</div>
+        <div class="status-bar-center">
+            <!-- 可选：标题或图标 -->
+        </div>
+        <div class="status-bar-right">
+            <span><i class="fas fa-signal"></i></span>
+            <span><i class="fas fa-wifi"></i></span>
+            <span><i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="content-area">
+        <!-- 头部标题栏 -->
+        <div class="header-card">
+            <div class="brand-logo">
+                <div class="logo-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="logo-text">时历养生</div>
+            </div>
+            <div class="month-selector">
+                <div class="month-text">2025年03月 <i class="fas fa-chevron-down"></i></div>
+                <div class="add-button" style="margin-left: auto; margin-right: 10px;">
+                    <a href="search.html" style="color: white;"><i class="fas fa-search"></i></a>
+                </div>
+                <div class="add-button">
+                    <a href="add_event.html" style="color: white;"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 日历网格 -->
+        <div class="calendar-container">
+            <!-- 星期头部 -->
+            <div class="calendar-grid">
+                <div class="weekday-header weekend-header">日</div>
+                <div class="weekday-header">一</div>
+                <div class="weekday-header">二</div>
+                <div class="weekday-header">三</div>
+                <div class="weekday-header">四</div>
+                <div class="weekday-header">五</div>
+                <div class="weekday-header weekend-header">六</div>
+                
+                <!-- 上个月日期 -->
+                <div class="calendar-day inactive">
+                    <div class="day-number">23</div>
+                    <div class="lunar-day">廿六</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">24</div>
+                    <div class="lunar-day">廿七</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">25</div>
+                    <div class="lunar-day">廿八</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">26</div>
+                    <div class="lunar-day">廿九</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">27</div>
+                    <div class="lunar-day">三十</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">28</div>
+                    <div class="lunar-day">二月</div>
+                </div>
+                <div class="calendar-day weekend">
+                    <div class="day-number">1</div>
+                    <div class="lunar-day">二月</div>
+                    <div class="holiday-tag">龙抬头</div>
+                </div>
+                
+                <!-- 第二周 -->
+                <div class="calendar-day weekend">
+                    <div class="day-number">2</div>
+                    <div class="lunar-day">初三</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">3</div>
+                    <div class="lunar-day">九九</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">4</div>
+                    <div class="lunar-day">初五</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">5</div>
+                    <div class="lunar-day">惊蛰</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">6</div>
+                    <div class="lunar-day">初七</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">7</div>
+                    <div class="lunar-day">初八</div>
+                </div>
+                <div class="calendar-day weekend">
+                    <div class="day-number">8</div>
+                    <div class="lunar-day">妇女节</div>
+                </div>
+                
+                <!-- 第三周 -->
+                <div class="calendar-day weekend current-day">
+                    <div class="day-number">9</div>
+                    <div class="lunar-day">初十</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">10</div>
+                    <div class="lunar-day">十一</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">11</div>
+                    <div class="lunar-day">十二</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">12</div>
+                    <div class="lunar-day">植树节</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">13</div>
+                    <div class="lunar-day">十四</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">14</div>
+                    <div class="lunar-day">十五</div>
+                </div>
+                <div class="calendar-day weekend">
+                    <div class="day-number">15</div>
+                    <div class="lunar-day">消费者日</div>
+                </div>
+                
+                <!-- 第四周 -->
+                <div class="calendar-day weekend">
+                    <div class="day-number">16</div>
+                    <div class="lunar-day">十七</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">17</div>
+                    <div class="lunar-day">十八</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">18</div>
+                    <div class="lunar-day">十九</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">19</div>
+                    <div class="lunar-day">二十</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">20</div>
+                    <div class="lunar-day">春分</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">21</div>
+                    <div class="lunar-day">廿二</div>
+                </div>
+                <div class="calendar-day weekend">
+                    <div class="day-number">22</div>
+                    <div class="lunar-day">廿三</div>
+                </div>
+                
+                <!-- 第五周 -->
+                <div class="calendar-day weekend">
+                    <div class="day-number">23</div>
+                    <div class="lunar-day">廿四</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">24</div>
+                    <div class="lunar-day">廿五</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">25</div>
+                    <div class="lunar-day">廿六</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">26</div>
+                    <div class="lunar-day">廿七</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">27</div>
+                    <div class="lunar-day">廿八</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">28</div>
+                    <div class="lunar-day">廿九</div>
+                </div>
+                <div class="calendar-day weekend">
+                    <div class="day-number">29</div>
+                    <div class="lunar-day">三月</div>
+                </div>
+                
+                <!-- 第六周 -->
+                <div class="calendar-day weekend">
+                    <div class="day-number">30</div>
+                    <div class="lunar-day">初二</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">31</div>
+                    <div class="lunar-day">上巳节</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">1</div>
+                    <div class="lunar-day">愚人节</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">2</div>
+                    <div class="lunar-day">初五</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">3</div>
+                    <div class="lunar-day">初六</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">4</div>
+                    <div class="lunar-day">清明节</div>
+                </div>
+                <div class="calendar-day inactive">
+                    <div class="day-number">5</div>
+                    <div class="lunar-day">初八</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 今日详情 -->
+        <div class="today-detail">
+            <div class="today-header">二月初十</div>
+            <div class="today-subheader">第11周 周日 宜忌</div>
+            
+            <div class="detail-row">
+                <div class="detail-label">今日:</div>
+                <div class="detail-value">九九第7天</div>
+            </div>
+        </div>
+        
+        <!-- 功能卡片 -->
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="feature-title">
+                    <i class="fas fa-book"></i>
+                    今日黄历
+                </div>
+                <div class="feature-content">
+                    <div>今日宜：祭祀 出行 结婚</div>
+                    <div>今日忌：动土 安葬 开市</div>
+                    <div class="feature-link">
+                        <a href="#">查看详情 <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">
+                    <i class="fas fa-cloud-sun"></i>
+                    天气情况
+                </div>
+                <div class="feature-content">
+                    <div>北京市 晴 20°C/8°C</div>
+                    <div>空气质量：优 PM2.5: 25</div>
+                    <div class="feature-link">
+                        <a href="#">查看详情 <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <div class="tab-item tab-active">
+            <div class="tab-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tab-text">日历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-book"></i></div>
+            <div class="tab-text">黄历</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-cloud-sun"></i></div>
+            <div class="tab-text">天气</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,209 @@
+<!--pages/almanac/almanac.wxml-->
+<view class="container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="nav-tabs">
+      <view class="nav-tab active">黄历</view>
+      <view class="nav-tab" bindtap="switchToLuck">好运</view>
+    </view>
+    <view class="share-icon" bindtap="onShareTap">
+      <image src="/assets/icons/arrow-right.svg" class="icon-small"></image>
+    </view>
+  </view>
+  
+  <!-- 日期选择器 -->
+  <view class="date-selector" bindtap="showDatePicker">
+    <view class="date-text">
+      {{currentDate.year}}年{{currentDate.month}}月{{currentDate.day}}日 
+      <image src="/assets/icons/arrow-down.svg" class="icon-mini"></image>
+    </view>
+  </view>
+  
+  <!-- 农历日期导航 -->
+  <view class="lunar-date-display">
+    <view class="arrow-icon" bindtap="goPrevDay">
+      <image src="/assets/icons/arrow-left.svg" class="icon-normal"></image>
+    </view>
+    <view class="lunar-date">{{lunarInfo.lunarMonth}}{{lunarInfo.lunarDay}}</view>
+    <view class="arrow-icon" bindtap="goNextDay">
+      <image src="/assets/icons/arrow-right.svg" class="icon-normal"></image>
+    </view>
+  </view>
+  
+  <!-- 日期详细信息 -->
+  <view class="date-details">
+    {{lunarInfo.yearGanZhi}}年 {{lunarInfo.monthGanZhi}}月 {{lunarInfo.dayGanZhi}}日[属{{lunarInfo.zodiac}}] {{currentDate.weekday}} 第{{weekOfYear}}周
+  </view>
+  
+  <!-- 宜忌区域 -->
+  <view class="almanac-yi-ji">
+    <view class="yi-ji-content">
+      <view><text class="yi-label">宜</text></view>
+      <view class="activities-container">
+        <text class="yi-tag" 
+              wx:for="{{almanacInfo.suit}}" 
+              wx:key="name" 
+              bindtap="showActivityDetail" 
+              data-type="suit" 
+              data-index="{{index}}">{{item.name}}</text>
+      </view>
+    </view>
+    
+    <view class="yi-ji-content">
+      <view><text class="ji-label">忌</text></view>
+      <view class="activities-container">
+        <text class="ji-tag" 
+              wx:for="{{almanacInfo.avoid}}" 
+              wx:key="name" 
+              bindtap="showActivityDetail" 
+              data-type="avoid" 
+              data-index="{{index}}">{{item.name}}</text>
+      </view>
+    </view>
+    
+    <view class="button-row">
+      <view class="button active">日程</view>
+      <view class="button" bindtap="goToQuestion">问问</view>
+    </view>
+  </view>
+  
+  <!-- 黄历详情信息 -->
+  <view class="almanac-card">
+    <view class="almanac-info">
+      <view class="almanac-title">黄帝纪元{{imperialYear}}年</view>
+      
+      <view class="info-grid">
+        <view class="info-item">
+          <view class="info-item-label">五行</view>
+          <view class="info-item-value">{{almanacInfo.wuxing}}</view>
+        </view>
+        <view class="info-item">
+          <view class="info-item-label">值神</view>
+          <view class="info-item-value">{{almanacInfo.zhiShen}}</view>
+        </view>
+        <view class="info-item">
+          <view class="info-item-label">冲煞</view>
+          <view class="info-item-value">冲{{almanacInfo.clash.animal}} 煞{{almanacInfo.clash.direction}}</view>
+        </view>
+        <view class="info-item">
+          <view class="info-item-label">星宿</view>
+          <view class="info-item-value">{{almanacInfo.starMansion}}</view>
+        </view>
+      </view>
+      
+      <!-- 八卦与神位 -->
+      <view class="gods-grid">
+        <view class="god-item">
+          <view class="god-name">财神</view>
+          <view class="god-position">{{almanacInfo.wealthGod}}</view>
+        </view>
+        <view class="bagua-container">
+          <view class="bagua-image">
+            <view class="bagua-inner">卦</view>
+          </view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">福神</view>
+          <view class="god-position">{{almanacInfo.luckGod}}</view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">喜神</view>
+          <view class="god-position">{{almanacInfo.joyGod}}</view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">今日胎神</view>
+          <view class="god-position">{{almanacInfo.fetusGod}}</view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">阳贵</view>
+          <view class="god-position">{{almanacInfo.yangGuiGod}}</view>
+        </view>
+      </view>
+      
+      <view class="gods-grid two-columns">
+        <view class="god-item">
+          <view class="god-name">建除十二神</view>
+          <view class="god-position">{{almanacInfo.twelveSigns}}</view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">彭祖百忌</view>
+          <view class="god-position red-text">
+            <block wx:for="{{almanacInfo.pengZu}}" wx:key="*this">
+              {{item}}<text wx:if="{{index < almanacInfo.pengZu.length-1}}">
+</text>
+            </block>
+          </view>
+        </view>
+      </view>
+      
+      <view class="gods-grid two-columns">
+        <view class="god-item">
+          <view class="god-name">吉神宜趋</view>
+          <view class="god-position">
+            {{almanacInfo.goodGods}}
+          </view>
+        </view>
+        <view class="god-item">
+          <view class="god-name">凶神宜忌</view>
+          <view class="god-position red-text">
+            {{almanacInfo.badGods}}
+          </view>
+        </view>
+      </view>
+      
+      <!-- 时辰吉凶 -->
+      <view class="hour-title">
+        <view class="info-item-label">时辰</view>
+        <view class="info-item-value">宜忌</view>
+      </view>
+      
+      <view class="hour-grid">
+        <block wx:for="{{hourInfo}}" wx:key="hour" wx:if="{{index < 6}}">
+          <view class="hour-item">
+            <view class="hour-name">{{item.hour.charAt(0)}}</view>
+            <view class="hour-luck {{item.luck === '吉' ? 'auspicious' : item.luck === '凶' ? 'inauspicious' : 'neutral'}}">{{item.luck}}</view>
+          </view>
+        </block>
+      </view>
+      
+      <view class="hour-grid">
+        <block wx:for="{{hourInfo}}" wx:key="hour" wx:if="{{index >= 6}}">
+          <view class="hour-item">
+            <view class="hour-name">{{item.hour.charAt(0)}}</view>
+            <view class="hour-luck {{item.luck === '吉' ? 'auspicious' : item.luck === '凶' ? 'inauspicious' : 'neutral'}}">{{item.luck}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 收起/展开按钮 -->
+  <view class="show-more" bindtap="toggleDetail">
+    {{showDetail ? '收起更多' : '查看更多'}} 
+    <image src="{{showDetail ? '/assets/icons/arrow-up.svg' : '/assets/icons/arrow-down.svg'}}" class="icon-mini"></image>
+  </view>
+  
+  <!-- 推荐内容 -->
+  <view class="recommendations" wx:if="{{showRecommendations}}">
+    <view class="recommendation-title">
+      为你推荐
+      <view class="see-more" bindtap="seeMoreRecommendations">
+        更多 <image src="/assets/icons/arrow-right.svg" class="icon-mini"></image>
+      </view>
+    </view>
+    
+    <view class="recommendation-card" wx:for="{{recommendations}}" wx:key="id" bindtap="openRecommendation" data-id="{{item.id}}">
+      <image class="recommendation-image" src="{{item.image}}" mode="aspectFill"></image>
+      <view class="recommendation-details">
+        <view class="recommendation-source">{{item.source}}</view>
+        <view class="recommendation-stats">{{item.likes}}人赞过</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 加载中提示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

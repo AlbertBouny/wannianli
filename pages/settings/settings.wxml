@@ -1,0 +1,97 @@
+<!--pages/settings/settings.wxml-->
+<view class="container">
+  <!-- 用户信息区域 -->
+  <view class="user-card" bindtap="goToLogin">
+    <view class="user-avatar">
+      <image class="avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="vip-badge" wx:if="{{isVIP}}">VIP</view>
+    </view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.nickName}}</view>
+      <view class="user-status" wx:if="{{!userInfo.isLogin}}">点击登录</view>
+      <view class="user-status vip-status" wx:elif="{{isVIP}}">VIP会员</view>
+      <view class="user-status" wx:else>普通用户</view>
+    </view>
+    <view class="arrow-right">
+      <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+    </view>
+  </view>
+  
+  <!-- 设置项列表 -->
+  <view class="settings-container">
+    <block wx:for="{{settingsList}}" wx:key="id" wx:for-item="group">
+      <view class="settings-group">
+        <view class="group-header">
+          <image class="group-icon" src="{{group.icon}}"></image>
+          <text class="group-title">{{group.title}}</text>
+        </view>
+        
+        <view class="group-content">
+          <block wx:for="{{group.items}}" wx:key="id">
+            <!-- 导航类型的设置项 -->
+            <view class="setting-item navigator" 
+                  wx:if="{{item.type === 'navigator'}}" 
+                  bindtap="handleItemClick" 
+                  data-type="{{item.type}}" 
+                  data-id="{{item.id}}" 
+                  data-url="{{item.url}}">
+              <text class="item-title">{{item.title}}</text>
+              <view class="item-action">
+                <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+              </view>
+            </view>
+            
+            <!-- 开关类型的设置项 -->
+            <view class="setting-item switch" 
+                  wx:elif="{{item.type === 'switch'}}">
+              <text class="item-title">{{item.title}}</text>
+              <view class="item-action">
+                <switch checked="{{settings[item.id]}}" 
+                        bindchange="changeSetting" 
+                        data-type="{{item.type}}" 
+                        data-id="{{item.id}}" 
+                        color="#e63946" />
+              </view>
+            </view>
+            
+            <!-- 选择器类型的设置项 -->
+            <view class="setting-item picker" 
+                  wx:elif="{{item.type === 'picker'}}">
+              <text class="item-title">{{item.title}}</text>
+              <view class="item-action">
+                <picker mode="selector" 
+                        range="{{item.options}}" 
+                        value="{{item.current}}" 
+                        bindchange="changeLanguage">
+                  <view class="picker-text">
+                    {{item.options[item.current]}}
+                    <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+                  </view>
+                </picker>
+              </view>
+            </view>
+            
+            <!-- 按钮类型的设置项 -->
+            <view class="setting-item button" 
+                  wx:elif="{{item.type === 'button'}}" 
+                  bindtap="handleItemClick" 
+                  data-type="{{item.type}}" 
+                  data-id="{{item.id}}" 
+                  data-action="{{item.action}}">
+              <text class="item-title">{{item.title}}</text>
+              <view class="item-action">
+                <text class="cache-size" wx:if="{{item.id === 'clear'}}">{{cacheSize}}</text>
+                <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text>中华万年历 v1.0.0</text>
+  </view>
+</view> 

@@ -1,0 +1,434 @@
+/* pages/horoscope/horoscope.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 页面标题样式 */
+.page-header {
+  background-color: #e63946;
+  color: white;
+  padding: 20rpx 30rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* 星座头部信息样式 */
+.sign-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  background-color: white;
+  margin-bottom: 20rpx;
+}
+
+.sign-info {
+  display: flex;
+  align-items: center;
+}
+
+.sign-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 20rpx;
+}
+
+.sign-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.sign-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.change-btn {
+  font-size: 28rpx;
+  color: #e63946;
+  padding: 10rpx 20rpx;
+  border: 1rpx solid #e63946;
+  border-radius: 30rpx;
+}
+
+/* 运势类型选择器样式 */
+.fortune-type-selector {
+  display: flex;
+  background-color: white;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.type-item {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.type-item.active {
+  color: #e63946;
+  font-weight: bold;
+}
+
+.type-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background-color: #e63946;
+  border-radius: 3rpx;
+}
+
+/* 运势内容区样式 */
+.fortune-content {
+  background-color: white;
+  padding: 30rpx;
+}
+
+.fortune-date {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 8rpx;
+  height: 32rpx;
+  background-color: #e63946;
+  margin-right: 16rpx;
+  border-radius: 4rpx;
+}
+
+/* 整体运势评分样式 */
+.fortune-overall {
+  margin-bottom: 40rpx;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 20rpx;
+}
+
+.star-filled,
+.star-empty {
+  width: 50rpx;
+  height: 50rpx;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.star-filled {
+  background-image: url('/assets/icons/star-filled.png');
+}
+
+.star-empty {
+  background-image: url('/assets/icons/star-empty.png');
+}
+
+/* 各方面运势样式 */
+.fortune-aspects {
+  margin-bottom: 40rpx;
+}
+
+.aspect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.aspect-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.aspect-label {
+  width: 80rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.aspect-bar-wrap {
+  flex: 1;
+  height: 16rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.aspect-bar {
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.aspect-bar.love {
+  background-color: #e63946;
+}
+
+.aspect-bar.career {
+  background-color: #457b9d;
+}
+
+.aspect-bar.wealth {
+  background-color: #f9a826;
+}
+
+.aspect-bar.health {
+  background-color: #2a9d8f;
+}
+
+.aspect-value {
+  width: 60rpx;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+}
+
+/* 幸运信息样式 */
+.fortune-lucky {
+  margin-bottom: 40rpx;
+}
+
+.lucky-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30rpx;
+}
+
+.lucky-item {
+  background-color: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lucky-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.lucky-value {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 运势描述样式 */
+.fortune-description {
+  margin-bottom: 40rpx;
+}
+
+.description-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* 今日建议样式 */
+.fortune-suggestions {
+  margin-bottom: 40rpx;
+}
+
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.suggestion-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background-color: #e63946;
+  margin-top: 8rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.suggestion-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 分享按钮样式 */
+.share-btn {
+  background-color: #e63946;
+  color: white;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  margin-top: 20rpx;
+  width: 80%;
+}
+
+.share-btn::after {
+  border: none;
+}
+
+/* 星座选择区样式 */
+.list-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  padding: 20rpx 30rpx;
+  background-color: #f5f5f5;
+}
+
+/* 最近使用的星座样式 */
+.recent-signs {
+  background-color: white;
+  margin-bottom: 20rpx;
+}
+
+.recent-list {
+  display: flex;
+  padding: 20rpx 30rpx;
+}
+
+.recent-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 40rpx;
+}
+
+.recent-icon {
+  width: 100rpx;
+  height: 100rpx;
+  margin-bottom: 10rpx;
+}
+
+.recent-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 所有星座网格样式 */
+.all-signs {
+  background-color: white;
+}
+
+.sign-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx;
+}
+
+.sign-grid-item {
+  width: 33.33%;
+  padding: 20rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign-grid-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 10rpx;
+}
+
+.sign-grid-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign-grid-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.sign-grid-date {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 加载中提示样式 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e63946;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

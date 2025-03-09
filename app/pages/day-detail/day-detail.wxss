@@ -1,0 +1,485 @@
+/* 日期详情页样式 */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 120rpx; /* 为底部操作栏留出空间 */
+}
+
+/* 日期头部 */
+.date-header {
+  background-color: #e63946;
+  color: #fff;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  width: 60rpx;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 40rpx;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+}
+
+.date-title {
+  font-size: 34rpx;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.date-subtitle {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+.header-right {
+  width: 60rpx;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.favorite-btn {
+  font-size: 40rpx;
+  opacity: 0.8;
+}
+
+.favorite-btn.is-favorite {
+  opacity: 1;
+  color: #ffdd00;
+}
+
+/* 农历卡片 */
+.lunar-card {
+  margin: 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.lunar-main {
+  flex: 1;
+}
+
+.lunar-date {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.lunar-year {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.lunar-solar-term {
+  margin-left: 20rpx;
+}
+
+.term-badge {
+  display: inline-block;
+  padding: 8rpx 16rpx;
+  background-color: rgba(230, 57, 70, 0.1);
+  color: #e63946;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+/* 黄历卡片 */
+.almanac-card {
+  margin: 0 20rpx 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.card-title .iconfont {
+  font-size: 36rpx;
+  margin-right: 10rpx;
+  color: #e63946;
+}
+
+.almanac-chongsha, .almanac-wuxing {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.divider {
+  margin: 0 16rpx;
+  color: #ddd;
+}
+
+/* 方位信息 */
+.almanac-directions {
+  display: flex;
+  justify-content: space-between;
+  margin: 20rpx 0;
+  padding: 16rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.direction-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.direction-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.direction-value {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 宜忌活动 */
+.almanac-activities {
+  margin: 20rpx 0;
+}
+
+.activity-section {
+  margin-bottom: 20rpx;
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.activity-title {
+  display: inline-block;
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-right: 16rpx;
+}
+
+.activity-title.good {
+  background-color: rgba(42, 157, 143, 0.1);
+  color: #2a9d8f;
+}
+
+.activity-title.bad {
+  background-color: rgba(230, 57, 70, 0.1);
+  color: #e63946;
+}
+
+.activity-preview {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.toggle-icon {
+  font-size: 28rpx;
+  color: #999;
+  transition: transform 0.3s;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.activity-detail {
+  padding: 16rpx 0 0 72rpx;
+}
+
+.activity-item {
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx dashed #f0f0f0;
+}
+
+.activity-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.activity-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.activity-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 时辰部分 */
+.hour-section {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.hour-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.hour-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.hour-detail {
+  border-top: 1rpx solid #f0f0f0;
+  padding-top: 16rpx;
+}
+
+.hour-item {
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx dashed #f0f0f0;
+}
+
+.hour-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.hour-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.hour-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.hour-goodbad {
+  font-size: 26rpx;
+  font-weight: 500;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.hour-goodbad.good {
+  background-color: rgba(42, 157, 143, 0.1);
+  color: #2a9d8f;
+}
+
+.hour-goodbad.bad {
+  background-color: rgba(230, 57, 70, 0.1);
+  color: #e63946;
+}
+
+.hour-activities {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.hour-suitable, .hour-avoid {
+  margin-bottom: 6rpx;
+}
+
+.hour-label {
+  font-weight: 500;
+}
+
+.hour-label.good {
+  color: #2a9d8f;
+}
+
+.hour-label.bad {
+  color: #e63946;
+}
+
+/* 日程卡片 */
+.events-card {
+  margin: 0 20rpx 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.event-item {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.event-time {
+  width: 150rpx;
+  font-size: 26rpx;
+  color: #666;
+  padding-right: 16rpx;
+}
+
+.event-time.all-day {
+  color: #e63946;
+  font-weight: 500;
+}
+
+.event-content {
+  flex: 1;
+}
+
+.event-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.event-color {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin-right: 10rpx;
+}
+
+.event-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.event-location {
+  font-size: 26rpx;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.event-location .iconfont {
+  font-size: 26rpx;
+  margin-right: 6rpx;
+}
+
+.event-category {
+  margin-left: 20rpx;
+}
+
+.category-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+/* 无日程状态 */
+.empty-events {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  color: #ddd;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+}
+
+.empty-add-btn {
+  font-size: 28rpx;
+  color: #e63946;
+  padding: 10rpx 30rpx;
+  border: 1rpx solid #e63946;
+  border-radius: 30rpx;
+}
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.action-btn .iconfont {
+  font-size: 40rpx;
+  margin-bottom: 4rpx;
+}
+
+.add-btn {
+  color: #e63946;
+}
+
+/* 通用样式 */
+.good {
+  color: #2a9d8f;
+}
+
+.bad {
+  color: #e63946;
+} 

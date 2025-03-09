@@ -1,0 +1,273 @@
+/* 添加日程页样式 */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 导航按钮 */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 30rpx;
+  background-color: #fff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cancel-btn, .save-btn {
+  font-size: 32rpx;
+  padding: 10rpx;
+}
+
+.cancel-btn {
+  color: #999;
+}
+
+.save-btn {
+  color: #e63946;
+  font-weight: 500;
+}
+
+/* 表单容器 */
+.form-container {
+  padding: 20rpx 0;
+}
+
+/* 表单分组 */
+.form-group {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+/* 表单项 */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.item-icon {
+  width: 40rpx;
+  display: flex;
+  justify-content: center;
+  margin-right: 20rpx;
+  color: #666;
+  font-size: 36rpx;
+}
+
+.item-label {
+  width: 160rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.item-arrow {
+  color: #ccc;
+  font-size: 30rpx;
+  margin-left: 10rpx;
+}
+
+/* 输入框样式 */
+.title-input {
+  width: 100%;
+  height: 80rpx;
+  font-size: 36rpx;
+  color: #333;
+  padding: 0 30rpx;
+}
+
+.input {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+
+/* 选择器样式 */
+picker {
+  flex: 1;
+  text-align: right;
+}
+
+.picker-value {
+  font-size: 30rpx;
+  color: #333;
+}
+
+/* 开关样式 */
+.switch-item {
+  margin-left: auto;
+}
+
+/* 颜色预览 */
+.color-preview {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  margin-right: 10rpx;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 表单头部 */
+.form-header {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.form-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.form-subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+
+.toggle-icon {
+  color: #999;
+  transition: transform 0.3s;
+}
+
+.toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+/* 标签容器 */
+.tags-container {
+  padding: 20rpx 30rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 12rpx 16rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.tag-text {
+  margin-right: 8rpx;
+}
+
+.tag-delete {
+  font-size: 28rpx;
+  color: #999;
+  line-height: 1;
+}
+
+.tag-input-container {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  border-radius: 30rpx;
+  background-color: #f0f0f0;
+}
+
+.tag-input {
+  flex: 1;
+  min-width: 120rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.tag-add-btn {
+  margin-left: 10rpx;
+  font-size: 28rpx;
+  color: #e63946;
+  line-height: 1;
+}
+
+/* 农历信息 */
+.lunar-info {
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.lunar-date {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.lunar-suitable, .lunar-avoid {
+  margin-bottom: 20rpx;
+}
+
+.lunar-subtitle {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.lunar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.lunar-tag {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #2a9d8f;
+  background-color: rgba(42, 157, 143, 0.1);
+}
+
+.lunar-tag.avoid {
+  color: #e63946;
+  background-color: rgba(230, 57, 70, 0.1);
+}
+
+/* 备注 */
+.notes-container {
+  padding: 20rpx 30rpx;
+}
+
+.notes-input {
+  width: 100%;
+  height: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 删除按钮 */
+.delete-container {
+  margin-top: 40rpx;
+  padding: 0 30rpx;
+}
+
+.delete-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background-color: #fff;
+  color: #e63946;
+  font-size: 32rpx;
+  border-radius: 10rpx;
+} 

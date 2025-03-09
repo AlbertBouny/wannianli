@@ -1,0 +1,87 @@
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <view class="header-title">选择城市</view>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <view class="search-input-wrap">
+      <icon name="search" size="32" color="#999"></icon>
+      <input class="search-input" placeholder="搜索城市" bindinput="searchCity" value="{{searchKeyword}}"/>
+      <icon wx:if="{{searchKeyword}}" name="clear" size="32" color="#999" bindtap="clearSearch"></icon>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <scroll-view class="search-result-list" wx:if="{{showSearchResults}}" scroll-y>
+    <view wx:if="{{searchResults.length === 0}}" class="empty-tip">
+      <text>未找到相关城市</text>
+    </view>
+    <view wx:else>
+      <view class="city-item" wx:for="{{searchResults}}" wx:key="code" data-city="{{item}}" bindtap="selectCity">
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 主要内容：当未显示搜索结果时 -->
+  <block wx:if="{{!showSearchResults}}">
+    <scroll-view class="city-list-scroll" scroll-y scroll-into-view="{{autoScrollToLetter ? 'letter-' + currentLetter : ''}}" scroll-with-animation>
+      <!-- 当前位置 -->
+      <view class="section" id="section-current">
+        <view class="section-title">当前定位</view>
+        <view class="current-location">
+          <view class="city-item location-item" data-city="{{currentCity}}" bindtap="selectCity" wx:if="{{locationAuth}}">
+            <icon name="location" size="32" color="#e63946"></icon>
+            <text class="city-name">{{currentCity.name}}</text>
+          </view>
+          <view class="location-error" wx:else bindtap="reauthorizeLocation">
+            <text>无法获取位置，点击重试</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 热门城市 -->
+      <view class="section" id="section-hot">
+        <view class="section-title">热门城市</view>
+        <view class="hot-cities">
+          <view class="city-item hot-city-item" wx:for="{{hotCities}}" wx:key="code" data-city="{{item}}" bindtap="selectCity">
+            {{item.name}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 城市列表 (按字母排序) -->
+      <block wx:for="{{letterList}}" wx:key="*this" wx:for-item="letter">
+        <view class="section" id="{{'letter-' + letter}}" wx:if="{{cityList[letter] && cityList[letter].length > 0}}">
+          <view class="section-title">{{letter}}</view>
+          <view class="city-group">
+            <view class="city-item" wx:for="{{cityList[letter]}}" wx:key="code" data-city="{{item}}" bindtap="selectCity">
+              {{item.name}}
+            </view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <!-- 字母索引条 -->
+    <view class="letter-index">
+      <view 
+        class="letter-item {{currentLetter === letter ? 'active' : ''}}" 
+        wx:for="{{letterList}}" 
+        wx:key="*this" 
+        wx:for-item="letter" 
+        data-letter="{{letter}}" 
+        bindtap="tapLetter"
+      >
+        {{letter}}
+      </view>
+    </view>
+  </block>
+
+  <!-- 加载中蒙层 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+  </view>
+</view> 

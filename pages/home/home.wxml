@@ -1,0 +1,150 @@
+<!--pages/home/home.wxml-->
+<view class="container">
+  <!-- 日历顶部区域 -->
+  <view class="header">
+    <view class="header-date">
+      <picker mode="date" value="{{selectedDate}}" start="1900-01-01" end="2100-12-31" bindchange="dateChange" fields="month">
+        <view class="year-month">
+          {{currentYear}}年{{currentMonth}}月
+          <view class="down-arrow"></view>
+        </view>
+      </picker>
+    </view>
+    <view class="header-right">
+      <view class="today-btn" bindtap="goToToday">今天</view>
+      <view class="btn-group">
+        <view class="mode-btn {{viewMode === 'month' ? 'active' : ''}}" bindtap="switchMode" data-mode="month">月</view>
+        <view class="mode-btn {{viewMode === 'week' ? 'active' : ''}}" bindtap="switchMode" data-mode="week">周</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 星期区域 -->
+  <view class="weekday-row">
+    <view class="weekday" wx:for="{{weekdays}}" wx:key="index">{{item}}</view>
+  </view>
+  
+  <!-- 日历区域 -->
+  <view class="calendar-body">
+    <!-- 月视图 -->
+    <view class="month-view" wx:if="{{viewMode === 'month'}}">
+      <view class="day-row" wx:for="{{dayRows}}" wx:key="index" wx:for-index="rowIndex">
+        <view class="day-cell {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isToday ? 'today' : ''}} {{item.isSelected ? 'selected' : ''}}"
+              wx:for="{{item.days}}" 
+              wx:key="fullDate" 
+              bindtap="selectDate" 
+              data-date="{{item.fullDate}}">
+          <view class="day-number">{{item.day}}</view>
+          <view class="lunar-day">{{item.lunarDay}}</view>
+          
+          <!-- 节日和节气标记 -->
+          <view class="day-marks" wx:if="{{item.festival || item.term || item.isWeekend}}">
+            <view class="festival-mark" wx:if="{{item.festival}}">{{item.festival}}</view>
+            <view class="term-mark" wx:elif="{{item.term}}">{{item.term}}</view>
+            <view class="weekend-mark" wx:elif="{{item.isWeekend && !item.festival && !item.term}}"></view>
+          </view>
+          
+          <!-- 日程数量标记 -->
+          <view class="event-dot" wx:if="{{item.eventCount > 0}}"></view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 周视图 -->
+    <view class="week-view" wx:if="{{viewMode === 'week'}}">
+      <view class="day-row">
+        <view class="day-cell week-cell {{item.isToday ? 'today' : ''}} {{item.isSelected ? 'selected' : ''}}"
+              wx:for="{{currentWeek}}" 
+              wx:key="fullDate" 
+              bindtap="selectDate" 
+              data-date="{{item.fullDate}}">
+          <view class="day-number">{{item.day}}</view>
+          <view class="lunar-day">{{item.lunarDay}}</view>
+          
+          <!-- 节日和节气标记 -->
+          <view class="day-marks" wx:if="{{item.festival || item.term || item.isWeekend}}">
+            <view class="festival-mark" wx:if="{{item.festival}}">{{item.festival}}</view>
+            <view class="term-mark" wx:elif="{{item.term}}">{{item.term}}</view>
+            <view class="weekend-mark" wx:elif="{{item.isWeekend && !item.festival && !item.term}}"></view>
+          </view>
+          
+          <!-- 日程数量标记 -->
+          <view class="event-dot" wx:if="{{item.eventCount > 0}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 事件列表区域 -->
+  <view class="events-container">
+    <view class="selected-date">
+      <view class="date-day">{{selectedDayInfo.day}}</view>
+      <view class="date-info">
+        <view class="date-weekday">{{selectedDayInfo.weekday}}</view>
+        <view class="date-lunar">{{selectedDayInfo.lunarMonth}}{{selectedDayInfo.lunarDay}}</view>
+      </view>
+      <view class="add-event" bindtap="addEvent">
+        <view class="add-icon">+</view>
+        <view>添加</view>
+      </view>
+    </view>
+    
+    <!-- 今日宜忌 -->
+    <view class="today-almanac" bindtap="goToAlmanac">
+      <view class="almanac-title">今日黄历</view>
+      <view class="almanac-content">
+        <view class="almanac-item">
+          <view class="almanac-label">宜</view>
+          <view class="almanac-value">{{todayAlmanac.good || '暂无数据'}}</view>
+        </view>
+        <view class="almanac-item">
+          <view class="almanac-label">忌</view>
+          <view class="almanac-value">{{todayAlmanac.bad || '暂无数据'}}</view>
+        </view>
+      </view>
+      <view class="almanac-more">查看详情 ></view>
+    </view>
+    
+    <!-- 天气预报 -->
+    <view class="today-weather" bindtap="goToWeather">
+      <view class="weather-city">{{weatherInfo.city || '定位中..'}}</view>
+      <view class="weather-temp">{{weatherInfo.temperature || '--'}}°</view>
+      <view class="weather-cond">{{weatherInfo.condition || '获取中..'}}</view>
+      <view class="weather-range">{{weatherInfo.low || '--'}}° / {{weatherInfo.high || '--'}}°</view>
+    </view>
+    
+    <!-- 事件列表 -->
+    <view class="events-list">
+      <view class="events-title">日程安排</view>
+      
+      <block wx:if="{{events.length > 0}}">
+        <view class="event-item" wx:for="{{events}}" wx:key="id" bindtap="viewEvent" data-id="{{item.id}}">
+          <view class="event-time">
+            <view>{{item.startTime}}</view>
+            <view class="event-end-time" wx:if="{{item.endTime}}">{{item.endTime}}</view>
+          </view>
+          <view class="event-content">
+            <view class="event-title">{{item.title}}</view>
+            <view class="event-location" wx:if="{{item.location}}">
+              <view class="location-icon"></view>
+              <view>{{item.location}}</view>
+            </view>
+          </view>
+          <view class="event-right">
+            <view class="event-type-tag" style="background-color: {{item.color}}">{{item.type}}</view>
+          </view>
+        </view>
+      </block>
+      
+      <view class="no-events" wx:else>
+        <view class="no-events-icon"></view>
+        <view class="no-events-text">暂无日程安排</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 浮动按钮 -->
+  <view class="float-btn" bindtap="addEvent">
+    <view class="add-icon-large">+</view>
+  </view>
+</view> 

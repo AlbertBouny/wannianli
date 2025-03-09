@@ -1,0 +1,155 @@
+<!--pages/weather/weather.wxml-->
+<view class="container">
+  <!-- 城市选择区域 -->
+  <view class="city-header">
+    <view class="city-selector" bindtap="switchCity">
+      <text class="city-name">{{currentCity.name}}</text>
+      <view class="city-arrow-icon">
+        <i class="fa fa-angle-down"></i>
+      </view>
+    </view>
+    <view class="refresh-btn {{currentCity.isLocating ? 'rotating' : ''}}" bindtap="refreshLocation">
+      <image class="refresh-icon" src="/assets/icons/refresh.png"></image>
+    </view>
+  </view>
+  
+  <!-- 实时天气区域 -->
+  <view class="current-weather">
+    <view class="temperature-value">{{currentWeather.temperature}}°</view>
+    <view class="condition-text">{{currentWeather.condition}}</view>
+    <image class="condition-icon" src="{{currentWeather.conditionIcon}}"></image>
+    <view class="weather-details">
+      <view class="detail-item">
+        <text class="detail-label">体感温度</text>
+        <text class="detail-value">{{currentWeather.feelsLike}}°</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">湿度</text>
+        <text class="detail-value">{{currentWeather.humidity}}%</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">风向</text>
+        <text class="detail-value">{{currentWeather.wind}}</text>
+      </view>
+    </view>
+    <view class="update-time">更新时间: {{currentWeather.updateTime}}</view>
+  </view>
+  
+  <!-- 天气预警区域 -->
+  <view class="weather-alerts" wx:if="{{weatherAlerts.length > 0}}">
+    <view class="alert-item" wx:for="{{weatherAlerts}}" wx:key="index" bindtap="showAlertDetail" data-index="{{index}}">
+      <view class="alert-icon alert-level-{{item.level}}">!</view>
+      <view class="alert-content">
+        <text class="alert-type">{{item.type}} {{item.level}}预警</text>
+        <text class="alert-time">{{item.pubTime}}</text>
+      </view>
+      <view class="alert-arrow">
+        <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空气质量区域 -->
+  <view class="air-quality">
+    <view class="section-title">空气质量</view>
+    <view class="aqi-container">
+      <view class="aqi-value">{{airQuality.aqi}}</view>
+      <view class="aqi-level">{{airQuality.level}}</view>
+    </view>
+    <view class="aqi-details">
+      <view class="aqi-item">
+        <text class="aqi-name">PM2.5</text>
+        <text class="aqi-num">{{airQuality.pm25}}</text>
+      </view>
+      <view class="aqi-item">
+        <text class="aqi-name">PM10</text>
+        <text class="aqi-num">{{airQuality.pm10}}</text>
+      </view>
+      <view class="aqi-item">
+        <text class="aqi-name">NO₂</text>
+        <text class="aqi-num">{{airQuality.no2}}</text>
+      </view>
+      <view class="aqi-item">
+        <text class="aqi-name">SO₂</text>
+        <text class="aqi-num">{{airQuality.so2}}</text>
+      </view>
+      <view class="aqi-item">
+        <text class="aqi-name">O₃</text>
+        <text class="aqi-num">{{airQuality.o3}}</text>
+      </view>
+      <view class="aqi-item">
+        <text class="aqi-name">CO</text>
+        <text class="aqi-num">{{airQuality.co}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 24小时预报区域 -->
+  <view class="hourly-forecast">
+    <view class="section-title">24小时预报</view>
+    <scroll-view class="hourly-scroll" scroll-x="true" enable-flex="true">
+      <view class="hourly-item" wx:for="{{hourlyForecast}}" wx:key="index">
+        <text class="hourly-time">{{item.time}}</text>
+        <image class="hourly-icon" src="{{item.conditionIcon}}"></image>
+        <text class="hourly-temp">{{item.temperature}}°</text>
+      </view>
+    </scroll-view>
+  </view>
+  
+  <!-- 7天预报区域 -->
+  <view class="daily-forecast">
+    <view class="section-title">7天预报</view>
+    <view class="daily-list">
+      <view class="daily-item" wx:for="{{dailyForecast}}" wx:key="index" bindtap="toggleDailyDetail" data-index="{{index}}">
+        <view class="daily-main">
+          <view class="daily-date">
+            <text class="date">{{item.date}}</text>
+            <text class="weekday">{{item.weekday}}</text>
+          </view>
+          <view class="daily-weather">
+            <image class="daily-icon" src="{{item.conditionIcon}}"></image>
+            <text class="daily-condition">{{item.condition}}</text>
+          </view>
+          <view class="daily-temp">
+            <text class="temp-high">{{item.tempHigh}}°</text>
+            <text class="temp-low">{{item.tempLow}}°</text>
+          </view>
+        </view>
+        <!-- 展开后的详细信息 -->
+        <view class="daily-detail" wx:if="{{item.showDetail}}">
+          <view class="detail-row">
+            <view class="detail-col">
+              <text class="detail-name">风向</text>
+              <text class="detail-value">东北风3级</text>
+            </view>
+            <view class="detail-col">
+              <text class="detail-name">湿度</text>
+              <text class="detail-value">45%</text>
+            </view>
+          </view>
+          <view class="detail-row">
+            <view class="detail-col">
+              <text class="detail-name">紫外线</text>
+              <text class="detail-value">中等</text>
+            </view>
+            <view class="detail-col">
+              <text class="detail-name">降水概率</text>
+              <text class="detail-value">10%</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部声明 -->
+  <view class="data-source">
+    <text>数据来源: 中国天气网</text>
+  </view>
+  
+  <!-- 加载中提示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

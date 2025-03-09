@@ -1,0 +1,167 @@
+<!--pages/horoscope/horoscope.wxml-->
+<view class="container">
+  <!-- 星座运势头部 -->
+  <view class="horoscope-header">
+    <view class="zodiac-info">
+      <image class="zodiac-icon" src="/assets/icons/zodiac/{{selectedZodiac.icon}}.png" mode="aspectFit"></image>
+      <view class="zodiac-details">
+        <view class="zodiac-name">{{selectedZodiac.name}}</view>
+        <view class="zodiac-date">{{selectedZodiac.date}}</view>
+      </view>
+    </view>
+    <view class="change-zodiac" bindtap="showZodiacSelector">
+      <text>切换星座</text>
+      <image class="icon-mini" src="/assets/icons/arrow-down.svg"></image>
+    </view>
+  </view>
+
+  <!-- 运势日期选择器 -->
+  <view class="fortune-date-selector">
+    <view class="date-tab {{fortuneType === 'today' ? 'active' : ''}}" bindtap="changeFortune" data-type="today">今日</view>
+    <view class="date-tab {{fortuneType === 'tomorrow' ? 'active' : ''}}" bindtap="changeFortune" data-type="tomorrow">明日</view>
+    <view class="date-tab {{fortuneType === 'week' ? 'active' : ''}}" bindtap="changeFortune" data-type="week">本周</view>
+    <view class="date-tab {{fortuneType === 'month' ? 'active' : ''}}" bindtap="changeFortune" data-type="month">本月</view>
+    <view class="date-tab {{fortuneType === 'year' ? 'active' : ''}}" bindtap="changeFortune" data-type="year">本年</view>
+  </view>
+
+  <!-- 运势日期 -->
+  <view class="fortune-date">
+    <text>{{fortuneDate}}</text>
+  </view>
+
+  <!-- 总体运势评分 -->
+  <view class="fortune-rating card">
+    <view class="rating-title">总体运势</view>
+    <view class="stars">
+      <block wx:for="{{5}}" wx:key="index">
+        <image 
+          class="star-icon" 
+          src="{{index < fortune.overallRating ? '/assets/icons/star-filled.png' : '/assets/icons/star-empty.png'}}">
+        </image>
+      </block>
+    </view>
+  </view>
+
+  <!-- 各方面运势 -->
+  <view class="fortune-aspects card">
+    <view class="aspect-item">
+      <view class="aspect-name">爱情运</view>
+      <view class="aspect-bar-container">
+        <view class="aspect-bar" style="width:{{fortune.love}}%"></view>
+      </view>
+      <view class="aspect-value">{{fortune.love}}%</view>
+    </view>
+    <view class="aspect-item">
+      <view class="aspect-name">事业运</view>
+      <view class="aspect-bar-container">
+        <view class="aspect-bar" style="width:{{fortune.career}}%"></view>
+      </view>
+      <view class="aspect-value">{{fortune.career}}%</view>
+    </view>
+    <view class="aspect-item">
+      <view class="aspect-name">财富运</view>
+      <view class="aspect-bar-container">
+        <view class="aspect-bar" style="width:{{fortune.wealth}}%"></view>
+      </view>
+      <view class="aspect-value">{{fortune.wealth}}%</view>
+    </view>
+    <view class="aspect-item">
+      <view class="aspect-name">健康运</view>
+      <view class="aspect-bar-container">
+        <view class="aspect-bar" style="width:{{fortune.health}}%"></view>
+      </view>
+      <view class="aspect-value">{{fortune.health}}%</view>
+    </view>
+  </view>
+
+  <!-- 幸运信息 -->
+  <view class="lucky-info card">
+    <view class="lucky-grid">
+      <view class="lucky-item">
+        <view class="lucky-label">幸运颜色</view>
+        <view class="lucky-value">
+          <view class="color-circle" style="background-color: {{fortune.luckyColor.hexCode}}"></view>
+          <text>{{fortune.luckyColor.name}}</text>
+        </view>
+      </view>
+      <view class="lucky-item">
+        <view class="lucky-label">幸运数字</view>
+        <view class="lucky-value">{{fortune.luckyNumber}}</view>
+      </view>
+      <view class="lucky-item">
+        <view class="lucky-label">吉利方位</view>
+        <view class="lucky-value">{{fortune.luckyDirection}}</view>
+      </view>
+      <view class="lucky-item">
+        <view class="lucky-label">幸运时段</view>
+        <view class="lucky-value">{{fortune.luckyTime}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 运势分析 -->
+  <view class="fortune-analysis card">
+    <view class="section-title">运势分析</view>
+    <view class="analysis-content">{{fortune.analysis}}</view>
+  </view>
+
+  <!-- 今日建议 -->
+  <view class="daily-suggestion card">
+    <view class="section-title">今日建议</view>
+    <view class="suggestion-content">{{fortune.suggestion}}</view>
+  </view>
+
+  <!-- 分享按钮 -->
+  <view class="share-button" bindtap="shareHoroscope">
+    <image src="/assets/icons/share.png" class="icon-medium"></image>
+    <text>分享我的运势</text>
+  </view>
+
+  <!-- 星座选择器 -->
+  <view class="zodiac-selector {{showZodiacList ? 'show' : ''}}">
+    <view class="zodiac-list-container">
+      <view class="selector-header">
+        <text>选择星座</text>
+        <view class="close-button" bindtap="hideZodiacSelector">×</view>
+      </view>
+      
+      <!-- 最近使用的星座 -->
+      <view class="recent-zodiac" wx:if="{{recentZodiacs.length > 0}}">
+        <view class="section-title small">最近使用</view>
+        <view class="recent-zodiac-list">
+          <view 
+            class="recent-zodiac-item" 
+            wx:for="{{recentZodiacs}}" 
+            wx:key="name"
+            bindtap="selectZodiac"
+            data-zodiac="{{item}}">
+            <image class="zodiac-mini-icon" src="/assets/icons/zodiac/{{item.icon}}.png"></image>
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 所有星座 -->
+      <view class="all-zodiacs">
+        <view class="section-title small">所有星座</view>
+        <view class="zodiacs-grid">
+          <view 
+            class="zodiac-grid-item {{selectedZodiac.name === item.name ? 'active' : ''}}" 
+            wx:for="{{allZodiacs}}" 
+            wx:key="name"
+            bindtap="selectZodiac"
+            data-zodiac="{{item}}">
+            <image class="zodiac-mini-icon" src="/assets/icons/zodiac/{{item.icon}}.png"></image>
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

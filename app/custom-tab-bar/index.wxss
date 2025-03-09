@@ -1,0 +1,3 @@
+/* 提示：自定义tabBar组件应该位于项目根目录下的custom-tab-bar文件夹中 */
+/* 该文件只是作为过渡，实际样式表在根目录下的custom-tab-bar文件夹中 */
+@import "../../custom-tab-bar/index.wxss"; 

@@ -1,0 +1,133 @@
+<!--pages/weather/weather.wxml-->
+<view class="container">
+  <!-- 城市选择栏 -->
+  <view class="location-bar">
+    <view class="location-left" bindtap="selectCity">
+      <image src="/assets/icons/location.svg" class="location-icon"></image>
+      <text class="location-name">{{currentCity}}</text>
+      <image src="/assets/icons/arrow-down.svg" class="arrow-icon"></image>
+    </view>
+    <view class="location-right" bindtap="goToSearch">
+      <image src="/assets/icons/search.svg" class="search-icon"></image>
+    </view>
+  </view>
+
+  <!-- 当前天气卡片 -->
+  <view class="weather-card">
+    <!-- 当前天气主要信息 -->
+    <view class="current-weather">
+      <view class="weather-temp">{{currentWeather.temperature}}°</view>
+      <view class="weather-icon-large">
+        <image src="{{currentWeather.iconUrl}}" mode="aspectFit"></image>
+      </view>
+      <view class="weather-desc">{{currentWeather.description}}</view>
+      <view class="weather-details">
+        <view class="detail-item">
+          <image src="/assets/icons/humidity.svg" class="detail-icon"></image>
+          <text>湿度 {{currentWeather.humidity}}%</text>
+        </view>
+        <view class="detail-item">
+          <image src="/assets/icons/wind.svg" class="detail-icon"></image>
+          <text>{{currentWeather.windDirection}} {{currentWeather.windSpeed}}km/h</text>
+        </view>
+      </view>
+      <view class="update-time">更新于: {{lastUpdateTime}}</view>
+    </view>
+
+    <!-- 小时预报 -->
+    <view class="hourly-forecast">
+      <view class="section-title">24小时预报</view>
+      <scroll-view class="hourly-container" scroll-x enable-flex>
+        <view class="hourly-item" wx:for="{{hourlyForecast}}" wx:key="time">
+          <text class="hourly-time">{{item.time}}</text>
+          <image class="hourly-icon" src="{{item.iconUrl}}"></image>
+          <text class="hourly-temp">{{item.temperature}}°</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 每日预报 -->
+    <view class="daily-forecast">
+      <view class="section-title">7天预报</view>
+      <view class="daily-item" wx:for="{{dailyForecast}}" wx:key="date">
+        <view class="daily-day">{{item.dayName}}</view>
+        <image class="daily-icon" src="{{item.iconUrl}}"></image>
+        <view class="daily-temp">
+          <text class="temp-min">{{item.lowTemp}}°</text>
+          <view class="temp-bar-container">
+            <view class="temp-bar" style="width: {{item.barWidth}}%; left: {{item.barLeft}}%;"></view>
+          </view>
+          <text class="temp-max">{{item.highTemp}}°</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 天气预警卡片 -->
+  <view class="weather-alert" wx:if="{{weatherAlert}}">
+    <view class="alert-title">
+      <image src="/assets/icons/warning.svg" class="alert-icon"></image>
+      <text>{{weatherAlert.title}}</text>
+    </view>
+    <view class="alert-content">{{weatherAlert.content}}</view>
+  </view>
+
+  <!-- 空气质量卡片 -->
+  <view class="air-quality-card">
+    <view class="air-quality-header">
+      <view class="air-title">
+        <image src="/assets/icons/leaf.svg" class="air-title-icon"></image>
+        <text>空气质量</text>
+      </view>
+      <view class="air-quality-value {{airQuality.levelClass}}">
+        <text class="air-quality-number">{{airQuality.value}}</text>
+        <text class="air-quality-label">{{airQuality.level}}</text>
+      </view>
+    </view>
+    
+    <view class="air-pollutants">
+      <view class="pollutant-item">
+        <text class="pollutant-label">PM2.5</text>
+        <text class="pollutant-value">{{airQuality.pm25}}</text>
+      </view>
+      <view class="pollutant-item">
+        <text class="pollutant-label">PM10</text>
+        <text class="pollutant-value">{{airQuality.pm10}}</text>
+      </view>
+      <view class="pollutant-item">
+        <text class="pollutant-label">SO₂</text>
+        <text class="pollutant-value">{{airQuality.so2}}</text>
+      </view>
+      <view class="pollutant-item">
+        <text class="pollutant-label">NO₂</text>
+        <text class="pollutant-value">{{airQuality.no2}}</text>
+      </view>
+      <view class="pollutant-item">
+        <text class="pollutant-label">O₃</text>
+        <text class="pollutant-value">{{airQuality.o3}}</text>
+      </view>
+      <view class="pollutant-item">
+        <text class="pollutant-label">CO</text>
+        <text class="pollutant-value">{{airQuality.co}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 生活指数 -->
+  <view class="life-indices-card">
+    <view class="section-title">生活指数</view>
+    <view class="indices-grid">
+      <view class="index-item" wx:for="{{lifeIndices}}" wx:key="name" bindtap="showIndexDetail" data-index="{{index}}">
+        <image class="index-icon" src="{{item.iconUrl}}"></image>
+        <text class="index-name">{{item.name}}</text>
+        <text class="index-level">{{item.level}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中遮罩 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载天气信息...</view>
+  </view>
+</view> 
